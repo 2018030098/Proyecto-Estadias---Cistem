@@ -7,6 +7,8 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
+        <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+
         <!-- Bootstrap5 -->
         <link rel="stylesheet" href="{{ asset('css/Bootstrap/bootstrap.min.css') }}">
         
@@ -46,9 +48,11 @@
             @livewireScripts
         </div>
     
-        <!-- Scripts -->
-            <!-- Mainly scripts -->
-            <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+            <!-- Scripts -->
+        <script src="{{ mix('js/app.js') }}" defer></script>
+
+        <!-- Mainly scripts -->
+        <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
         <script src="{{ asset('js/popper2.min.js') }}"></script>
         <script src="{{ asset('js/Bootstrap/bootstrap.min.js') }}"></script>
         <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script> -->
