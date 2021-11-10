@@ -1,6 +1,7 @@
 <x-guest-layout>
     <x-jet-authentication-card>
-            
+        <x-slot name="logo"> <!-- Esto resuelve el problema que se genera en authentication card, ya que solicita un logo y dicho logo esta en vendor --> </x-slot>
+        
         <div class="middle-box text-center loginscreen gray-bg rounded shadow-lg">
             <div class="p-3">
                 <div class="text-center">
