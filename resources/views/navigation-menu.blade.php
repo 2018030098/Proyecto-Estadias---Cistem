@@ -91,7 +91,7 @@
                     <li style="padding: 20px">
                         <span class="m-r-sm text-muted welcome-message">Bienvenido</span>
                     </li>
-                    <form action="{{ route('logout') }}" method="post" class="mt-2">
+                    <form action="{{ route('logout') }}" method="post" class="mt-3">
                         @csrf
                         <li>
                             <a href="{{ route('logout') }}" class="text-decoration-none m-r-sm " onclick="event.preventDefault(); this.closest('form').submit();"> 

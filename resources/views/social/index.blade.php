@@ -1,8 +1,18 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Social') }}
-        </h2>
+        <!-- <div class="row wrapper white-bg page-heading">
+            <div class="col-lg-10"> -->
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight"> {{ __('Social') }} </h2>
+                <!-- <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="index.html">Home</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        <strong>Layouts</strong>
+                    </li>
+                </ol> -->
+            <!-- </div>
+        </div> -->
     </x-slot>
     <x-slot name="slot">
         <div class="">
