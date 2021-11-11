@@ -45,10 +45,11 @@
 
             @stack('modals')
 
-            @livewireScripts
         </div>
-    
+        
             <!-- Scripts -->
+        @livewireScripts
+        
         <script src="{{ mix('js/app.js') }}" defer></script>
 
         <!-- Mainly scripts -->
