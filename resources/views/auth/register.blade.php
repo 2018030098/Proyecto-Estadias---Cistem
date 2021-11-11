@@ -1,7 +1,7 @@
 <x-guest-layout>
     <x-jet-authentication-card>
     <x-slot name="logo"> <!-- Esto resuelve el problema que se genera en authentication card, ya que solicita un logo y dicho logo esta en vendor --> </x-slot>
-    
+
         <div class="middle-box text-center loginscreen gray-bg rounded shadow-lg">
             <div class="text-center">
                 <img src="{{ asset('img/Logo.png') }}" alt="Imagen del logo">
@@ -21,6 +21,7 @@
                         <!-- email -->
                         <input id="email" name="email" type="email" class="form-control" placeholder="Correo electronico" :value="old('email')" required/>
                     </div>
+                    
                     <div class="mb-3">
                         <!-- password -->
                         <input id="password" name="password" type="password" class="form-control" placeholder="Contraseña" required autocomplete="new-password"/>
@@ -56,9 +57,16 @@
                 <a href="{{ route('login') }}" class="text-muted text-center text-decoration-none">Ya tengo cuenta</a>
             </div>
         </div>
-
-        
     </x-jet-authentication-card>
 </x-guest-layout>
-
-<x-jet-validation-errors />
+@if($errors->has('email'))
+    <ul>
+        @foreach($errors->all() as $error)
+            <div class="alert alert-danger d-flex align-items-center alert-dismissible animated fadeInRigth" role="alert">
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                    {{  $error  }}    
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endforeach
+    </ul>
+@endif

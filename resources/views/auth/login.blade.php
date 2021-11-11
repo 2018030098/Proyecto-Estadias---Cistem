@@ -67,4 +67,14 @@
     </x-jet-authentication-card>
 </x-guest-layout>
 
-<x-jet-validation-errors class="mb-4"/>
+@if($errors->has('email'))
+    <ul>
+        @foreach($errors->all() as $error)
+            <div class="alert alert-danger d-flex align-items-center alert-dismissible animated fadeInRigth" role="alert">
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                    {{  $error  }}    
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endforeach
+    </ul>
+@endif
