@@ -56,6 +56,7 @@
                                 <x-jet-input-error for="photo" class="mt-2" />
                             </div>
                         @endif
+                    <!--  -->
                         
                         <!-- Name -->
                         <div class="col-span-6 sm:col-span-4">

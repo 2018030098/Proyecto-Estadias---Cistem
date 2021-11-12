@@ -1,20 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
-        <!-- <div class="row wrapper white-bg page-heading">
-            <div class="col-lg-10"> -->
-                <h2 class="font-semibold text-xl text-gray-800 leading-tight"> {{ __('Social') }} </h2>
-                <!-- <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
-                        <a href="index.html">Home</a>
-                    </li>
-                    <li class="breadcrumb-item active">
-                        <strong>Layouts</strong>
-                    </li>
-                </ol> -->
-            <!-- </div>
-        </div> -->
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight"> {{ __('Social') }} </h2>
     </x-slot>
     <x-slot name="slot">
+        <div>
+            <a href="{{ route('social.create') }}" class="btn btn-dark">Crear nueva publicacion</a>
+        </div>
         <div class="">
             @foreach($users as $user)
             <div class="card my-5">

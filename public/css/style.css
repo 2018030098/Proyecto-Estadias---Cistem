@@ -998,11 +998,11 @@ h5 {
 .nav-header {
   padding: 33px 25px;
   background-color: hsl(209, 100%, 10%);
-  background-image: url("../img/patterns/header-profile.png");
+  background-image: url("../img/patterns/header-profile-skin.jpg");
 }
 .bg_backimg{
-  background-color: hsl(209, 100%, 10%);
-  background-image: url("../img/patterns/header-profile.png");
+  background-color: hsl(209, 35%, 25%);
+  /* background-image: url("../img/patterns/header-profile-skin-4.jpg"); */
 }
 .caret {
   display: inline-block;

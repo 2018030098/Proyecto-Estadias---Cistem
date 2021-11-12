@@ -26,7 +26,7 @@ class socialController extends Controller
     public function create()
     {
         $users = User::all();
-        return view('social.index', compact('users'));
+        return view('social.create-publish-form', compact('users'));
     }
 
     /**
