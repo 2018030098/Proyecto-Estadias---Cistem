@@ -10,4 +10,10 @@ class Publication extends Model
     use HasFactory;
 
     protected $fillable = ['title', 'description', 'status', 'user_Id'];
+
+    protected function allInfo(){
+        $data = 0;
+
+        return $data;
+    }
 }

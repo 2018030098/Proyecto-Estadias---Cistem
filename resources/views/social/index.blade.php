@@ -7,15 +7,13 @@
             <a href="{{ route('social.create') }}" class="btn btn-dark">Crear nueva publicacion</a>
         </div>
         <div class="">
-            @foreach($users as $user)
+            @foreach($publication as $public)
             <div class="card my-5">
                 <div class="card-header">
-                    {{ $user->id }}
+                    {{ $public->title }}
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title"> {{ $user->name }} </h5>
-                    <p class="card-text"> {{ $user->email }} </p>
-                    <a href="#" class="btn btn-primary"> {{ $user->password }} </a>
+                    <p class="card-text"> {{ $public->description }} </p>
                 </div>
             </div>
             @endforeach

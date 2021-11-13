@@ -15,8 +15,9 @@ class publicationController extends Controller
      */
     public function index()
     {
-        $users = User::all();
-        return view('social.index', compact('users'));
+        $publication = Publication::all();
+        dd($publication);
+        return view('social.index', compact('publication'));
     }
 
     /**
