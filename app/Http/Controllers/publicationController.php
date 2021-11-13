@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Publication;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class socialController extends Controller
+class publicationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -25,8 +26,11 @@ class socialController extends Controller
      */
     public function create()
     {
-        $users = User::all();
-        return view('social.create-publish-form', compact('users'));
+        $users = auth()->user();
+        $publish = new Publication();
+        $publish->user_Id = $users->id;
+        $name = $users->name;
+        return view('social.create-publication-form', compact(['publish','name']));
     }
 
     /**
@@ -37,7 +41,28 @@ class socialController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $data = $request->all();
+            $users = ["user_Id" => auth()->user()->id]; 
+            $data = array_merge($data,$users);
+            Publication::create($data);
+            $message = ["status" => true,"title" => "Exito" ,"message" => "La publicacion se creo con exito", "classTitle" => "bg-success bg-gradient", "classBody" => "bg-success bg-opacity-50", "icon" => "fas fa-check-circle"];
+        } catch (\Throwable $th) {
+            //throw $th; // expandir mensajes de error por codigo / cada falla tiene su codigo
+            $message = ["status" => true,"title" => "Error" ,"message" => "No se pudo crear la publicacion correctamente", "classTitle" => "bg-danger bg-gradient", "classBody" => "bg-danger bg-opacity-50", "icon" => "fas fa-exclamation-triangle"];
+        } finally {
+            return redirect()->route('social.index')->with($message);
+        }
+
+
+        // $data = $request->all();
+
+        // if ($request->has('image')) {
+        //     $image_path = $request->file('image')->store('medias');
+        //     $data['featured_image_url'] = $image_path;
+        // }
+        // Product::create($data);
+
     }
 
     /**
@@ -46,7 +71,7 @@ class socialController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show()
     {
         //
     }

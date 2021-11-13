@@ -20,5 +20,25 @@
             </div>
             @endforeach
         </div>
+        @if(session('status'))
+            <div style="position: absolute; top: 20px; right: 20px;">
+                <div class="alert alert-dismissible" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header {{ session('classTitle') }}">
+                        <div class="col"> 
+                            <i class="{{ session('icon') }}"> </i>
+                            <strong class="mr-auto m-l-sm">{{ session('title') }}</strong> 
+                        </div>
+                        <div class="col-auto">
+                            <button type="button" class="ml-2 mb-1 close" data-bs-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toast-body {{ session('classBody') }}">
+                        {{ session('message') }}
+                    </div>
+                </div>
+            </div>
+        @endif
     </x-slot>
 </x-app-layout>

@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\socialController;
+use App\Http\Controllers\publicationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,5 +23,5 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 })->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::resource('/social', socialController::class);
+    Route::resource('/social', publicationController::class);
 });

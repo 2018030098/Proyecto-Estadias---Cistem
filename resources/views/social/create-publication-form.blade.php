@@ -11,33 +11,40 @@
         </ol>
     </x-slot>
     <x-slot name="slot">
-
         <div class="container animated fadeInDown">
             <div class="mt-3">
                 <div class="row py-3 bg-white shadow-sm px-3">
                     <h2> Informacion </h2>
-                    <div class="col-2">
-                        <div class="col-span-6 sm:col-span-4">
-                            <x-jet-label for="name" value="{{ __('Nombre') }}" class="form-label" />
-                            <x-jet-input id="name" type="text" class="mt-1 block w-full form-control" wire:model.defer="state.name" disabled autocomplete="name" />
-                            <x-jet-input-error for="name" class="mt-2" />
+                    <form action="{{ route('social.store') }}" method="post" enctype="multipart/form-data">
+                        @csrf
+                        <div class="col-2">
+                            <div class="col-span-6 sm:col-span-4">
+                                <x-jet-label for="name" value="{{ __('Nombre') }}" class="form-label" />
+                                <x-jet-input id="name" type="text" class="mt-1 block w-full form-control" placeholder="{{ $name }}" value="{{ old('title', $publish->title) }}" disabled autocomplete="name" />
+                                <x-jet-input-error for="name" class="mt-2" />
+                            </div>
                         </div>
-                    </div>
-                    <div class="col">
-                        <div class="col-span-6 sm:col-span-4">
-                            <x-jet-label for="name" value="{{ __('Titulo') }}" class="form-label" />
-                            <x-jet-input id="title" type="text" class="mt-1 block w-full form-control" />
-                            <x-jet-input-error for="title" class="mt-2" />
+                        <div class="col">
+                            <!-- Name -->
+                            <div class="col-span-6 sm:col-span-4">
+                                <x-jet-label for="title" value="{{ __('Titulo') }}" class="form-label" />
+                                <x-jet-input id="title" name="title" type="text" class="mt-1 block w-full form-control" value="{{ old('title', $publish->title) }}" />
+                                <x-jet-input-error for="title" class="mt-2" />
+                            </div>
+                            <!-- Description -->
+                            <div class="col-span-6 sm:col-span-4 mt-4">
+                                <x-jet-label for="description" value="{{ __('Descripcion') }}" class="form-label" />
+                                <textarea name="description" id="description" class="form-control border-gray-300 rounded-md shadow-sm" value="{{ old('description', $publish->description) }}" cols="15" rows="4"></textarea>
+                            </div>
                         </div>
-                        <div class="col-span-6 sm:col-span-4 mt-4">
-                            <x-jet-label for="description" value="{{ __('Descripcion') }}" class="form-label" />
-                            <textarea class="form-control border-gray-300 rounded-md shadow-sm" name="description" id="description" cols="15" rows="4"></textarea>
+                        <div>
+                            <button class="btn btn-dark"> {{ __('Guardar')}} </button>
                         </div>
-                    </div>
+                    </form>
                 </div>
                 <div class="row my-3">
                 <!-- img -->
-                    <div class="col-lg-12">
+                    <!-- <div class="col-lg-12">
                         <div class="ibox ">
                             <div class="ibox-content">
                                 <h2>
@@ -78,11 +85,11 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 <!-- img -->
                 </div>
                 <div class="row">
-                    
+                    <!-- los botones -->
                 </div>
             </div>
            
