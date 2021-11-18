@@ -39,7 +39,7 @@
                         </div>
                     </div>
                     <div class="logo-element">
-                        <a class="text-decoration-none" href="#">IN+</a>
+                        <a class="text-decoration-none" href="{{ route('dashboard') }}">IN+</a>
                     </div>
                 </li>
                 <li class="{{ Request::is('social','social/*') ? 'active' : '' }}">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use App\Models\Publication;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -16,8 +17,13 @@ class publicationController extends Controller
     public function index()
     {
         $publication = Publication::all();
-        dd($publication);
-        return view('social.index', compact('publication'));
+        // $publication = User::with('publication')->get();
+        $user = User::all();
+        $comments = Comment::all();
+        $auth = auth()->user();
+        // $publication = $publication->user();
+        // dd($publication);
+        return view('social.index', compact('publication','user','comments','auth'));
     }
 
     /**
@@ -43,13 +49,28 @@ class publicationController extends Controller
     public function store(Request $request)
     {
         try {
-            $data = $request->all();
-            $users = ["user_Id" => auth()->user()->id]; 
-            $data = array_merge($data,$users);
-            Publication::create($data);
-            $message = ["status" => true,"title" => "Exito" ,"message" => "La publicacion se creo con exito", "classTitle" => "bg-success bg-gradient", "classBody" => "bg-success bg-opacity-50", "icon" => "fas fa-check-circle"];
+            if ($request->has('title')) {
+                $data = $request->all();
+
+                // if ($request->has('image')) {
+                //     $image_path = $request->file('image')->store('medias');
+                //     $data['featured_image_url'] = $image_path;
+                // }
+
+                $users = ["user_Id" => auth()->user()->id]; 
+                $data = array_merge($data,$users);
+                Publication::create($data);
+                $message = ["status" => true,"title" => "Exito" ,"message" => "La publicacion se creo con exito", "classTitle" => "bg-success bg-gradient", "classBody" => "bg-success bg-opacity-50", "icon" => "fas fa-check-circle"];
+            }
+            elseif($request->has('comment')) {
+                $data = $request->all();
+                $users = ["user_Id" => auth()->user()->id]; 
+                $data = array_merge($data,$users);
+                Comment::create($data);
+                $message = ["status" => false];
+            }
         } catch (\Throwable $th) {
-            //throw $th; // expandir mensajes de error por codigo / cada falla tiene su codigo
+            throw $th; // expandir mensajes de error por codigo / cada falla tiene su codigo
             $message = ["status" => true,"title" => "Error" ,"message" => "No se pudo crear la publicacion correctamente", "classTitle" => "bg-danger bg-gradient", "classBody" => "bg-danger bg-opacity-50", "icon" => "fas fa-exclamation-triangle"];
         } finally {
             return redirect()->route('social.index')->with($message);

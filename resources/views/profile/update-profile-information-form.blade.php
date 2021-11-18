@@ -27,13 +27,14 @@
                                                         photoPreview = e.target.result;
                                                     };
                                                     reader.readAsDataURL($refs.photo.files[0]);
+                                                    {{-- dd(asset('storage/'$this->state['profile_photo_path'])) --}}
                                             " />
 
                                 <x-jet-label for="photo" value="{{ __('Photo') }}" />
                                 
                                 <!-- Current Profile Photo -->
                                 <div class="mt-2" x-show="! photoPreview">
-                                    <img src="{{ $this->user->profile_photo_url }}" alt="{{ $this->user->name }}" class="rounded-full h-20 w-20 object-cover">
+                                    <img src="{{ asset('storage/'.$this->state['profile_photo_path']) }}" alt="{{ $this->user->name }}" class="rounded-full h-20 w-20 object-cover">
                                 </div>
 
                                 <!-- New Profile Photo Preview -->

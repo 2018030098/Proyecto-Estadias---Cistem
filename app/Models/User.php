@@ -30,6 +30,14 @@ class User extends Authenticatable
     ];
 
     /**
+     * Relaciones
+     * 
+     */
+    public function publication(){
+        return $this->hasMany(Publication::class);
+    }
+
+    /**
      * The attributes that should be hidden for serialization.
      *
      * @var array

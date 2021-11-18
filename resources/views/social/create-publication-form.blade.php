@@ -36,6 +36,11 @@
                                 <x-jet-label for="description" value="{{ __('Descripcion') }}" class="form-label" />
                                 <textarea name="description" id="description" class="form-control border-gray-300 rounded-md shadow-sm" value="{{ old('description', $publish->description) }}" cols="15" rows="4"></textarea>
                             </div>
+                            <!-- Imagen -->
+                            {{-- <div class="col-span-6 sm:col-span-4 mt-4">
+                                <x-jet-label for="description" value="{{ __('Imagen') }}" class="form-label" />
+                                <input type="file" name="description" id="description" class="form-control border-gray-300 rounded-md shadow-sm" value="{{ old('description', $publish->description) }}" cols="15" rows="4"></textarea>
+                            </div> --}}
                         </div>
                         <div>
                             <button class="btn btn-dark"> {{ __('Guardar')}} </button>

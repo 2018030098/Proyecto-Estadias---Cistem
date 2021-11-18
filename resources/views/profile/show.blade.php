@@ -20,13 +20,21 @@
                 <div class="mt-10 sm:mt-0">
 
                 <!-- modificacion de Contraseña -->
-                    @livewire('profile.update-password-form')
+                @livewire('profile.update-password-form')
                 <!--  -->
                 
                 </div>
 
                 <x-jet-section-border />
             @endif
+
+            {{-- @if(true) --}}
+            <div class="mt-10 sm:mt-0">
+
+                @yield('image')
+
+            </div>
+            {{-- @endif --}}
 
             <!-- Veridicacion en 2 pasos -->
                 {{-- @if (Laravel\Fortify\Features::canManageTwoFactorAuthentication())
