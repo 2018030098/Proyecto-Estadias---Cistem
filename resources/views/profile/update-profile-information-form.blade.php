@@ -27,7 +27,6 @@
                                                         photoPreview = e.target.result;
                                                     };
                                                     reader.readAsDataURL($refs.photo.files[0]);
-                                                    {{-- dd(asset('storage/'$this->state['profile_photo_path'])) --}}
                                             " />
 
                                 <x-jet-label for="photo" value="{{ __('Photo') }}" />

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Models\Image;
 use App\Models\Publication;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -16,14 +17,13 @@ class publicationController extends Controller
      */
     public function index()
     {
-        $publication = Publication::all();
-        // $publication = User::with('publication')->get();
+        $publication = Publication::getAllPublication();
+        dd($publication);
         $user = User::all();
         $comments = Comment::all();
         $auth = auth()->user();
-        // $publication = $publication->user();
-        // dd($publication);
-        return view('social.index', compact('publication','user','comments','auth'));
+        $image = Image::all();
+        return view('social.index', compact('publication','user','comments','auth','image'));
     }
 
     /**
@@ -50,24 +50,35 @@ class publicationController extends Controller
     {
         try {
             if ($request->has('title')) {
+                // Insercion de Publicacion
                 $data = $request->all();
-
-                // if ($request->has('image')) {
-                //     $image_path = $request->file('image')->store('medias');
-                //     $data['featured_image_url'] = $image_path;
-                // }
-
+                if ($request->hasFile('image')) {
+                    $i = 0;
+                    // Obtencion de la direccion de cada imagen recibida / cada una de las direcciones se guardan en un arreglo
+                    foreach ($request->image as $image) {
+                        $img_path = $image->store('media-publication','public');
+                        $path['featured_image_url'][$i] = $img_path;
+                        $i++;
+                    }
+                }
                 $users = ["user_Id" => auth()->user()->id]; 
                 $data = array_merge($data,$users);
-                Publication::create($data);
+                // creacion de la publicacion / ademas guardando dicha informacion en una variable para obtener su ID
+                $newPublic = (Publication::create($data));
+                $newPublic = ["publish_Id" => $newPublic->id];
+                foreach ($path['featured_image_url'] as $image) {
+                    $dataImg = array_merge(["img_path" => $image],$newPublic);
+                    Image::create($dataImg);
+                }
                 $message = ["status" => true,"title" => "Exito" ,"message" => "La publicacion se creo con exito", "classTitle" => "bg-success bg-gradient", "classBody" => "bg-success bg-opacity-50", "icon" => "fas fa-check-circle"];
             }
             elseif($request->has('comment')) {
+                // Insercion de Comentario
                 $data = $request->all();
                 $users = ["user_Id" => auth()->user()->id]; 
                 $data = array_merge($data,$users);
                 Comment::create($data);
-                $message = ["status" => false];
+                $message = ["status" => false]; // si no se envia la variable message marcara error / el false hace que no se muestre nada
             }
         } catch (\Throwable $th) {
             throw $th; // expandir mensajes de error por codigo / cada falla tiene su codigo
@@ -75,16 +86,6 @@ class publicationController extends Controller
         } finally {
             return redirect()->route('social.index')->with($message);
         }
-
-
-        // $data = $request->all();
-
-        // if ($request->has('image')) {
-        //     $image_path = $request->file('image')->store('medias');
-        //     $data['featured_image_url'] = $image_path;
-        // }
-        // Product::create($data);
-
     }
 
     /**

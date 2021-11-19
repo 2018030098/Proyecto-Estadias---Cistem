@@ -33,6 +33,15 @@
                         <p>
                             {{ $public->description }}
                         </p>
+                        <div>
+                            <div class="container">
+                            @foreach($image as $img)
+                                @if($public->id == $img->publish_Id)
+                                    <img src="{{ asset('storage/'.$img->img_path) }}" alt="imagen" class="img-fluid">    
+                                @endif
+                            @endforeach
+                            </div>
+                        </div>
                     </div>
                     <div class="social-footer">
                         @foreach($comments as $comment)
@@ -82,7 +91,7 @@
                     @endif
                 @endforeach
             </div>
-            <div class="col me-5">
+            <div class="col container ms-5">
                 <div class="position-sticky">
                     <div class="d-flex justify-content-center my-5">
                         <a href="{{ route('social.create') }}" class="btn btn-success">Crear nueva publicacion</a>
