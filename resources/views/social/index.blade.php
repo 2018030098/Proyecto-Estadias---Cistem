@@ -5,27 +5,24 @@
     <x-slot name="slot">
         <div class="row container">
             <div class="col-9">
-        @foreach($publication as $public)
-            @if($public->status === 1)
+                @foreach($publication as $public)
+                    @if($public->status === 1)
                 <div class="social-feed-box shadow my-3">
-                    <div class="social-avatar">
-                        @foreach($user as $users)
-                            @if($public->user_Id == $users->id)
-                                <img alt="image" src="{{ asset('storage/'.$users->profile_photo_path) }}" class="rounded-full object-cover">
-                                @break
-                            @endif
-                        @endforeach
+                    <div class="social-avatar">                                    
                         <div class="media-body row">
-                            <div class="col-auto">
-                                <a href="#" class="text-decoration-none">
-                                    @foreach($user as $users)
-                                        @if($public->user_Id == $users->id)
-                                            {{ $users->name }}
-                                            @break
-                                        @endif
-                                    @endforeach
-                                </a>
-                                <small class="text-muted"> {{ $public->updated_at }} </small>
+                            <div class="col-auto row">
+                            @foreach($user as $users)   @if($public->user_Id == $users->id)
+                                <div class="col">
+                                    <img alt="image" src="{{ asset('storage/'.$users->profile_photo_path) }}" class="rounded-full object-cover">
+                                </div>
+                                <div class="col-auto">
+                                    <a href="#" class="text-decoration-none">                   
+                                        {{ $users->name }}
+                                        @break                                                  
+                                @endif  @endforeach
+                                    </a>
+                                    <small class="text-muted"> {{ $public->updated_at }} </small>
+                                </div>
                             </div>
                             <div class="text-center col h5">
                             {{ $public->title }}
@@ -40,49 +37,52 @@
                     <div class="social-footer">
                         @foreach($comments as $comment)
                             @if($comment->publish_Id == $public->id)
-                                <div class="social-comment">
+                        <div class="social-comment">
+                            <div class="media-body row">
                                 @foreach($user as $users)
                                     @if($comment->user_Id == $users->id)
-                                        <img alt="image" src="{{ asset('storage/'.$users->profile_photo_path) }}" class="rounded-full object-cover">
+                                <div class="col-auto d-flex justify-content-center">
+                                    <img alt="image" src="{{ asset('storage/'.$users->profile_photo_path) }}" class="rounded-full object-cover">
+                                </div>
+                                <div class="col">
+                                    <a href="#" class="text-decoration-none">
+                                        {{ $users->name }}
                                         @break
+                                        @endif
+                                    @endforeach
+                                    </a>
+                                    <span> {{ $comment->comment }} </span>
+                                    <br/>
+                                    <small class="text-muted">{{ $comment->updated_at }}</small>
+                                </div>
+                            </div>
+                        </div>
                                     @endif
                                 @endforeach
-                                    <div class="media-body">
-                                        <a href="#" class="text-decoration-none">
-                                        @foreach($user as $users)
-                                            @if($comment->user_Id == $users->id)
-                                                {{ $users->name }}
-                                                @break
-                                            @endif
-                                        @endforeach
-                                        </a>
-                                        <span> {{ $comment->comment }} </span>
-                                        <br/>
-                                        <small class="text-muted">{{ $comment->updated_at }}</small>
-                                    </div>
-                                </div>
-                            @endif
-                        @endforeach
-                        <div class="social-comment">
-                            @foreach($user as $users)
+                        <div class="social-comment row">
+                            @foreach($user as $users)   
                                 @if($auth->id == $users->id)
-                                    <img alt="image" src="{{ asset('storage/'.$users->profile_photo_path) }}" class="rounded-full object-cover">
-                                    @break
-                                @endif
+                            <div class="col-auto">
+                                <img alt="image" src="{{ asset('storage/'.$users->profile_photo_path) }}" class="rounded-full object-cover">
+                            </div>
+                            @break 
+                                @endif  
                             @endforeach
-                            <form class="media-body" action="{{ route('social.store') }}" method="post" enctype="multipart/form-data">
+                            <form class="media-body col" action="{{ route('social.store') }}" method="post" enctype="multipart/form-data">
                             @csrf
                                 <textarea class="form-control" id="comment" name="comment" placeholder="Write comment..."></textarea>
                                 <input id="publish_Id" name="publish_Id" value="{{ $public->id }}" hidden>
-                                <button class="btn btn-dark"> {{ __('Guardar')}} </button>
+                                <div class="position-relative"> 
+                                    <button class="btn btn-primary end-0"> {{ __('Guardar')}} </button> 
+                                </div>
                             </form>
                         </div>
                     </div>
                 </div>
-            @endif
-        @endforeach
+                    @endif
+                @endforeach
             </div>
-            <div class="col me-5"> <!-- position-absolute -->
+            <div class="col me-5">
                 <div class="position-sticky">
                     <div class="d-flex justify-content-center my-5">
                         <a href="{{ route('social.create') }}" class="btn btn-success">Crear nueva publicacion</a>
