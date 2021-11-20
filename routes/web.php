@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\pruebasController; //eliminar
 use App\Http\Controllers\publicationController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,4 +25,5 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 
 Route::middleware('auth')->group(function () {
     Route::resource('/social', publicationController::class);
+    Route::get('/prueba',[pruebasController::class, 'prueba'])->name('prueba'); //eliminar
 });

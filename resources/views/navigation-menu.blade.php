@@ -66,10 +66,10 @@
                         <span> Pagina 4</span>
                     </a>
                 </li>
-                <li class="">
-                    <a href="#####" class="text-decoration-none ">
-                        <i class="fas fa-cogs"></i>
-                        <span> # Pruebas #</span>
+                <li class="{{ Request::is('prueba','prueba/*') ? 'active' : '' }}">
+                    <a href="{{ route('prueba') }}" class="text-decoration-none"> 
+                        <i class="fas fa-cogs"></i> 
+                        <span class="nav-label"># Pruebas1 #</span> 
                     </a>
                 </li>
                 <li class="">
