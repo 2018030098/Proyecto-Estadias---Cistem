@@ -17,13 +17,93 @@ class publicationController extends Controller
      */
     public function index()
     {
-        $publication = Publication::getAllPublication();
-        dd($publication);
-        $user = User::all();
-        $comments = Comment::all();
+        // Obtencion de la informacion de la base de datos
+        $Publications = Publication::all();
+        $Users = User::all();
+        $Images = Image::all();
+        $Comments = Comment::all();
         $auth = auth()->user();
-        $image = Image::all();
-        return view('social.index', compact('publication','user','comments','auth','image'));
+
+        $i = 0;
+        foreach ($Publications as $public) { // filtrado de informacion / la informacion de las publicaciones se agrupan en arreglos
+            if ($public->status === 1) { // Recorre cada una de las publicaciones, pasando solo por las que estan activas
+                
+                foreach ($Users as $usr) {  // Encontrar al usuario que le pertenece la publicacion
+                    if ($usr->id === $public->user_Id) {
+                        $user = $usr;
+                        break;
+                    }
+                }
+
+                $inc = 0;
+                $image = null;
+                foreach ($Images as $img) { // Encontrar todas las imagenes que le pertenecen a la publicacion
+                    if ($img->publish_Id === $public->id) {
+                        $image[$inc] = $img->img_path; 
+                        $inc++;
+                    }
+                }
+
+                $inc = 0;
+                $comment = null;
+                foreach ($Comments as $comm) { // Encontrar todos los commentarios que le pertenecen a la publicacion
+                    if ($comm->publish_Id === $public->id) {
+                        if ($comm->user_Id === $user->id) { // Encontrar al usuario que le pertenece el comentario
+                            $comment[$inc] = [
+                                "name" => $user->name,
+                                "profile_photo_path" => $user->profile_photo_path,
+                                "comment" => $comm->comment,
+                                "updated_at" => $comm->updated_at
+                            ];
+                        } else {
+                            foreach ($Users as $usr) {
+                                if ($comm->user_Id === $usr->id) {
+                                    $comment[$inc] = [
+                                        "name" => $usr->name,
+                                        "profile_photo_path" => $usr->profile_photo_path,
+                                        "comment" => $comm->comment,
+                                        "updated_at" => $comm->updated_at
+                                    ];
+                                }
+                            }
+                        }
+                        $inc++;
+                    }
+                }
+
+                // creacion del objeto que contendra toda la informacion de la publicacion
+                $publication[$i] = array_merge(
+                    [
+                        "user" => [
+                            "name" => $user->name,
+                            "profile_photo_path" => $user->profile_photo_path
+                        ]
+                    ],
+                    [
+                        "publication" => [
+                            "id" => $public->id,
+                            "title" => $public->title,
+                            "description" => $public->description,
+                            "updated_at" => $public->updated_at
+                        ]
+                    ],
+                    [
+                        "images" => $image
+                    ],
+                    [
+                        "comments" => $comment
+                    ],
+                    [
+                        "auth" => [
+                            "profile_photo_path" => $auth->profile_photo_path
+                        ]
+                    ]
+                );
+                $i++;
+            }
+        }
+        // dd($publication);
+        return view('social.index', compact('publication'));
     }
 
     /**
@@ -37,7 +117,7 @@ class publicationController extends Controller
         $publish = new Publication();
         $publish->user_Id = $users->id;
         $name = $users->name;
-        return view('social.create-publication-form', compact(['publish','name']));
+        return view('social.create-publication-form', compact(['publish','name','users']));
     }
 
     /**

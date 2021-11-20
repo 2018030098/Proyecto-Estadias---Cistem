@@ -41,6 +41,9 @@
                                 <x-jet-label for="image[]" value="{{ __('Imagen') }}" class="form-label" />
                                 <input type="file" name="image[]" id="image[]" class="form-control border-gray-300 rounded-md shadow-sm" multiple>
                             </div> 
+                            <div class="container">
+                                <!-- Aqui iran la imagenes que se selecionen -->
+                            </div>
                         </div>
                         <div>
                             <button class="btn btn-dark"> {{ __('Guardar')}} </button>
