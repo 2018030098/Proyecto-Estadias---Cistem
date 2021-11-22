@@ -134,8 +134,8 @@ class publicationController extends Controller
                 $data = $request->all();
                 if ($request->hasFile('image')) {
                     $i = 0;
-                    // Obtencion de la direccion de cada imagen recibida / cada una de las direcciones se guardan en un arreglo
-                    foreach ($request->image as $image) {
+                                // dd($request->image);
+                    foreach ($request->image as $image) { // Obtencion de la direccion de cada imagen recibida / cada una de las direcciones se guardan en un arreglo
                         $img_path = $image->store('media-publication','public');
                         $path['featured_image_url'][$i] = $img_path;
                         $i++;
@@ -143,8 +143,7 @@ class publicationController extends Controller
                 }
                 $users = ["user_Id" => auth()->user()->id]; 
                 $data = array_merge($data,$users);
-                // creacion de la publicacion / ademas guardando dicha informacion en una variable para obtener su ID
-                $newPublic = (Publication::create($data));
+                $newPublic = (Publication::create($data)); // creacion de la publicacion / ademas guardando dicha informacion en una variable para obtener su ID
                 $newPublic = ["publish_Id" => $newPublic->id];
                 foreach ($path['featured_image_url'] as $image) {
                     $dataImg = array_merge(["img_path" => $image],$newPublic);
@@ -164,7 +163,7 @@ class publicationController extends Controller
             throw $th; // expandir mensajes de error por codigo / cada falla tiene su codigo
             $message = ["status" => true,"title" => "Error" ,"message" => "No se pudo crear la publicacion correctamente", "classTitle" => "bg-danger bg-gradient", "classBody" => "bg-danger bg-opacity-50", "icon" => "fas fa-exclamation-triangle"];
         } finally {
-            return redirect()->route('social.index')->with($message);
+            return redirect()->route('social.index');//->with($message);
         }
     }
 

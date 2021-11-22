@@ -68,13 +68,27 @@
 </x-guest-layout>
 
 @if($errors->has('email'))
-    <ul>
-        @foreach($errors->all() as $error)
-            <div class="alert alert-danger d-flex align-items-center alert-dismissible animated fadeInRigth" role="alert">
-                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
-                    {{  $error  }}    
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div style="position: absolute; top: 20px; right: 20px;">
+        <div class="alert alert-dismissible" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-danger bg-gradient">
+                <div class="col"> 
+                    <i class="fas fa-exclamation-triangle"> </i>
+                    <strong class="mr-auto m-l-sm">{{ __('Error') }}</strong> 
+                </div>
+                <div class="col-auto">
+                    <button type="button" class="ml-2 mb-1 close" data-bs-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true" class="bg-transparent"><i class="fas fa-times"></i></span>
+                    </button>
+                </div>
             </div>
-        @endforeach
-    </ul>
+            <div class="toast-body bg-danger bg-opacity-50">
+            @foreach($errors->all() as $error)
+                <ul>
+                    <i class="fas fa-exclamation-circle"> </i>
+                    <span>{{ $error }}</span>
+                </ul>
+            @endforeach
+            </div>
+        </div>
+    </div>
 @endif

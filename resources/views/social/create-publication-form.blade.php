@@ -39,7 +39,7 @@
                             <!-- Imagen -->
                             <div class="col-span-6 sm:col-span-4 mt-4">
                                 <x-jet-label for="image[]" value="{{ __('Imagen') }}" class="form-label" />
-                                <input type="file" name="image[]" id="image[]" class="form-control border-gray-300 rounded-md shadow-sm" multiple>
+                                <input type="file" name="image[]" id="image[]" class="form-control border-gray-300 rounded-md shadow-sm" onchange="previewFiles()" multiple>
                             </div> 
                             <div class="container">
                                 <!-- Aqui iran la imagenes que se selecionen -->
@@ -50,51 +50,8 @@
                         </div>
                     </form>
                 </div>
-                <div class="row my-3">
-                <!-- img -->
-                    <!-- <div class="col-lg-12">
-                        <div class="ibox ">
-                            <div class="ibox-content">
-                                <h2>
-                                    Images
-                                </h2>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="image-crop">
-                                            <img src="img/p3.jpg">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <h4>Preview image</h4>
-                                        <div class="img-preview img-preview-sm"></div>
-                                        <h4>Comon method</h4>
-                                        <p>
-                                            You can upload new image to crop container and easy download new cropped image.
-                                        </p>
-                                        <div>
-                                            <label title="Upload image file" for="inputImage" class="btn btn-primary">
-                                                <input type="file" accept="image/*" name="file" id="inputImage" style="display:none">
-                                                Upload image
-                                            </label>
-                                        </div>
-                                        <a href="" id="download" class="btn btn-primary">Download</a>
-                                        <h4>Other method</h4>
-                                        <p>
-                                            You may set cropper options with <code>$(image}).cropper(options)</code>
-                                        </p>
-                                        <div class="btn-group">
-                                            <button class="btn btn-white" id="zoomIn" type="button">Zoom In</button>
-                                            <button class="btn btn-white" id="zoomOut" type="button">Zoom Out</button>
-                                            <button class="btn btn-white" id="rotateLeft" type="button">Rotate Left</button>
-                                            <button class="btn btn-white" id="rotateRight" type="button">Rotate Right</button>
-                                            <button class="btn btn-warning" id="setDrag" type="button">New crop</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
-                <!-- img -->
+                <div class="row my-3" id="preview">
+                    <!-- Previsualizacion de imagenes -->
                 </div>
                 <div class="row">
                     <!-- los botones -->
@@ -102,6 +59,8 @@
             </div>
            
         </div>
+
+        <script src="{{ asset('js/img/preview-img.js') }}"></script>
 
     </x-slot>
 </x-app-layout>
