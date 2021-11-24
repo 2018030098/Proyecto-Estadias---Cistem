@@ -8,6 +8,8 @@ use App\Models\Publication;
 use App\Models\User;
 use Illuminate\Http\Request;
 
+use function GuzzleHttp\Promise\all;
+
 class publicationController extends Controller
 {
     /**
@@ -19,7 +21,6 @@ class publicationController extends Controller
     {
         // Obtencion de la informacion de la base de datos
         $Publications = Publication::all();
-        $Users = User::all();
         $Images = Image::all();
         $Comments = Comment::all();
         $auth = auth()->user();
@@ -28,12 +29,7 @@ class publicationController extends Controller
         foreach ($Publications as $public) { // filtrado de informacion / la informacion de las publicaciones se agrupan en arreglos
             if ($public->status === 1) { // Recorre cada una de las publicaciones, pasando solo por las que estan activas
                 
-                foreach ($Users as $usr) {  // Encontrar al usuario que le pertenece la publicacion
-                    if ($usr->id === $public->user_Id) {
-                        $user = $usr;
-                        break;
-                    }
-                }
+                $user = User::find($public->user_Id);
 
                 $inc = 0;
                 $image = null;
@@ -56,16 +52,13 @@ class publicationController extends Controller
                                 "updated_at" => $comm->updated_at
                             ];
                         } else {
-                            foreach ($Users as $usr) {
-                                if ($comm->user_Id === $usr->id) {
-                                    $comment[$inc] = [
-                                        "name" => $usr->name,
-                                        "profile_photo_path" => $usr->profile_photo_path,
-                                        "comment" => $comm->comment,
-                                        "updated_at" => $comm->updated_at
-                                    ];
-                                }
-                            }
+                            $usr = User::find($comm->user_Id);
+                            $comment[$inc] = [
+                                "name" => $usr->name,
+                                "profile_photo_path" => $usr->profile_photo_path,
+                                "comment" => $comm->comment,
+                                "updated_at" => $comm->updated_at
+                            ];
                         }
                         $inc++;
                     }
@@ -102,7 +95,8 @@ class publicationController extends Controller
                 $i++;
             }
         }
-        // dd($publication);
+
+        // dd($publication); // observar que informacion tiene el arreglo generado
         return view('social.index', compact('publication'));
     }
 
@@ -113,11 +107,15 @@ class publicationController extends Controller
      */
     public function create()
     {
-        $users = auth()->user();
-        $publish = new Publication();
-        $publish->user_Id = $users->id;
-        $name = $users->name;
-        return view('social.create-publication-form', compact(['publish','name','users']));
+        $publication = ["user" => [
+            "name" => auth()->user()->name,
+            "profile_photo_path" => auth()->user()->profile_photo_path
+            ]
+        ];
+
+        $cnd = false;
+        // dd($publication); // observar que informacion tiene el arreglo generado
+        return view('social.create-publication-form', compact('publication','cnd'));
     }
 
     /**
@@ -134,7 +132,6 @@ class publicationController extends Controller
                 $data = $request->all();
                 if ($request->hasFile('image')) {
                     $i = 0;
-                                // dd($request->image);
                     foreach ($request->image as $image) { // Obtencion de la direccion de cada imagen recibida / cada una de las direcciones se guardan en un arreglo
                         $img_path = $image->store('media-publication','public');
                         $path['featured_image_url'][$i] = $img_path;
@@ -186,7 +183,38 @@ class publicationController extends Controller
      */
     public function edit($id)
     {
-        //
+        $public = Publication::find($id);
+        $user = User::find($public->user_Id);
+        $Images = Image::all();
+
+        $i = 0;
+        $image = null;
+        foreach ($Images as $img ) {
+            if ($img->publish_Id === $public->id) {
+                $image[$i] = $img->img_path;
+                $i++;
+            }
+        }
+        
+        $publication = [
+            "user" => [
+                "name" => $user->name,
+                "profile_photo_path" => $user->profile_photo_path
+            ],
+            "publication" => [
+                "id" => $public->id,
+                "title" => $public->title,
+                "description" => $public->description,
+                "updated_at" => $public->updated_at,
+                "created_at" => $public->created_at,
+                "status" => $public->status
+            ],
+            "image" => $image
+        ];
+
+        $cnd = true;
+        // dd($publication); // observar que informacion tiene el arreglo generado
+        return view('social.create-publication-form', compact('publication','cnd'));
     }
 
     /**
@@ -198,7 +226,9 @@ class publicationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = $request->all();
+        
+        dd($data,$id);
     }
 
     /**

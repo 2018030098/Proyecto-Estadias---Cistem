@@ -7,6 +7,13 @@
             <div class="col-9">
                 @foreach($publication as $public)
                 <div class="social-feed-box shadow my-3">
+                        <div class="float-end social-action dropdown">
+                            <button type="button" class="btn btn-dark dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent"></button>
+                            <ul class="dropdown-menu m-t-xs">
+                                <li><a class="dropdown-item" href="{{ route('social.edit',$public['publication']['id']) }}">{{ __('Modificar') }}</a></li>
+                                <li><a class="dropdown-item" href="{{-- route('social.destroy',$public['publication']['id']) --}}" disabled>{{ __('Eliminar') }}</a></li>
+                            </ul>
+                        </div>
                     <div class="social-avatar">                                    
                         <div class="media-body row">
                             <div class="col-auto row">
@@ -20,8 +27,8 @@
                                     <small class="text-muted"> {{ $public['publication']['updated_at'] }} </small>
                                 </div>
                             </div>
-                            <div class="text-center col h5">
-                            {{ $public['publication']['title'] }}
+                            <div class="col text-center h5">
+                                {{ $public['publication']['title'] }}
                             </div>
                         </div>
                     </div>
