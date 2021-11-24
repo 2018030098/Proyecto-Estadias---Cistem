@@ -34,7 +34,7 @@ class publicationController extends Controller
                 $inc = 0;
                 $image = null;
                 foreach ($Images as $img) { // Encontrar todas las imagenes que le pertenecen a la publicacion
-                    if ($img->publish_Id === $public->id) {
+                    if ($img->publish_Id === $public->id && $img->status === 1) {
                         $image[$inc] = $img->img_path; 
                         $inc++;
                     }
@@ -160,7 +160,7 @@ class publicationController extends Controller
             throw $th; // expandir mensajes de error por codigo / cada falla tiene su codigo
             $message = ["status" => true,"title" => "Error" ,"message" => "No se pudo crear la publicacion correctamente", "classTitle" => "bg-danger bg-gradient", "classBody" => "bg-danger bg-opacity-50", "icon" => "fas fa-exclamation-triangle"];
         } finally {
-            return redirect()->route('social.index');//->with($message);
+            return redirect()->route('social.index')->with($message);
         }
     }
 
@@ -190,7 +190,7 @@ class publicationController extends Controller
         $i = 0;
         $image = null;
         foreach ($Images as $img ) {
-            if ($img->publish_Id === $public->id) {
+            if ($img->publish_Id === $public->id && $img->status === 1) {
                 $image[$i] = $img->img_path;
                 $i++;
             }
@@ -226,9 +226,44 @@ class publicationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $data = $request->all();
-        
-        dd($data,$id);
+        try {
+            $data = $request->all();
+
+            // dd($request);
+
+            $public = Publication::find($id);
+
+            $public->title = $data['title'];
+            $public->description = $data['description'];
+            if ($request->hasFile('image')) {
+                $Images = Image::all();
+                foreach ($Images as $img ) {
+                    if ($img->publish_Id === $public->id && $img->status === 1) {
+                        $img->status = 0;
+                        $img->save();
+                    }
+                }
+                $i = 0;
+                foreach ($data['image'] as $image) { // Obtencion de la direccion de cada imagen recibida / cada una de las direcciones se guardan en un arreglo
+                    $img_path = $image->store('media-publication','public');
+                    $path['featured_image_url'][$i] = $img_path;
+                    $i++;
+                }
+            }
+            if (isset($path['featured_image_url'])) {
+                foreach ($path['featured_image_url'] as $url) {
+                    $dataImg = array_merge(["img_path" => $url],["publish_Id" => $public->id]);
+                    Image::create($dataImg);
+                }
+            }
+            $public->save();
+            $message = ["status" => true,"title" => "Exito" ,"message" => "La publicacion se modifico con exito", "classTitle" => "bg-info bg-gradient", "classBody" => "bg-info bg-opacity-50", "icon" => "fas fa-check-circle"];
+        } catch (\Throwable $th) {
+            // throw $th;
+            $message = ["status" => true,"title" => "Error" ,"message" => "No se pudo actualizar la publicacion correctamente", "classTitle" => "bg-warning bg-gradient", "classBody" => "bg-warning bg-opacity-50", "icon" => "fas fa-exclamation-triangle"];
+        } finally {
+            return redirect()->route('social.index')->with($message);
+        }
     }
 
     /**

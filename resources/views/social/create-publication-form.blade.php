@@ -59,21 +59,21 @@
                             <div class="col-span-6 sm:col-span-4">
                                 <x-jet-label for="title" value="{{ __('Titulo') }}" class="form-label" />
                                 @if($cnd)
-                                <x-jet-input id="title" name="title" type="text" class="mt-1 block w-full form-control" value="{{ $publication['publication']['title'] }}" /> 
+                                <x-jet-input id="title" name="title" type="text" class="mt-1 block w-full form-control" value="{{ $publication['publication']['title'] }}" require/> 
                                 @else
-                                <x-jet-input id="title" name="title" type="text" class="mt-1 block w-full form-control" /> 
+                                <x-jet-input id="title" name="title" type="text" class="mt-1 block w-full form-control" require/> 
                                 @endif
                                 <x-jet-input-error for="title" class="mt-2" />
                             </div>
                             <!-- Description -->
                             <div class="col-span-6 sm:col-span-4 mt-4">
                                 <x-jet-label for="description" value="{{ __('Descripcion') }}" class="form-label" />
-                                <textarea name="description" id="description" class="form-control border-gray-300 rounded-md shadow-sm" cols="15" rows="4">@if($cnd){{ $publication['publication']['description']}}@endif </textarea>
+                                <textarea name="description" id="description" class="form-control border-gray-300 rounded-md shadow-sm" cols="15" rows="4" require>@if($cnd){{ $publication['publication']['description']}}@endif </textarea>
                             </div>
                             <!-- Imagen -->
                             <div class="col-span-6 sm:col-span-4 mt-4">
                                 <x-jet-label for="image[]" value="{{ __('Imagen') }}" class="form-label" />
-                                <input type="file" name="image[]" id="image[]" class="form-control border-gray-300 rounded-md shadow-sm" onchange="previewFiles()" multiple>
+                                <input type="file" name="image[]" id="image[]" class="form-control border-gray-300 rounded-md shadow-sm" value="@if($cnd) @if($publication['image'] != @null) @foreach($publication['image'] as $img) {{ asset('storage/'.$img) }} @endforeach @endif @endif" onchange="previewFiles()" multiple>
                             </div>
                         </div>
                         <div>
@@ -86,7 +86,17 @@
                     <div id="title" class="d-none">
                         <h3 class="d-flex justify-content-center">{{ __('Imagenes Seleccionadas') }}</h3>
                     </div>
-                    <div id="preview" class="row"></div>
+                    <div id="preview" class="row">
+                        @if($cnd)
+                        @if($publication['image'] != @null)
+                            @foreach( $publication['image'] as $img)
+                        <div class="col-auto">
+                            <img src="{{ asset('storage/'.$img) }}" alt="imagen" class="img-thumbnail">
+                        </div>
+                            @endforeach
+                        @endif
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
