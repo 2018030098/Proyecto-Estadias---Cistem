@@ -7,6 +7,7 @@ use App\Models\Image;
 use App\Models\Publication;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 use function GuzzleHttp\Promise\all;
 
@@ -19,81 +20,89 @@ class publicationController extends Controller
      */
     public function index()
     {
-        // Obtencion de la informacion de la base de datos
-        $Publications = Publication::all();
-        $Images = Image::all();
-        $Comments = Comment::all();
+        // Obtencion de la informacion de la base de datos               
+        if (isset($_GET['order']) && $_GET['order'] == 1) {
+            $Publications = DB::table('publications')->orderBy('updated_at','asc')->where('status','=','1')->get();
+        }else{
+            $Publications = DB::table('publications')->orderBy('updated_at','desc')->where('status','=','1')->get();
+        }
+        // $Comments = Comment::all();
         $auth = auth()->user();
+
+        // dd($Publications);
 
         $i = 0;
         foreach ($Publications as $public) { // filtrado de informacion / la informacion de las publicaciones se agrupan en arreglos
-            if ($public->status === 1) { // Recorre cada una de las publicaciones, pasando solo por las que estan activas
-                
-                $user = User::find($public->user_Id);
+            $user = User::find($public->user_Id);
 
-                $inc = 0;
-                $image = null;
-                foreach ($Images as $img) { // Encontrar todas las imagenes que le pertenecen a la publicacion
-                    if ($img->publish_Id === $public->id && $img->status === 1) {
-                        $image[$inc] = $img->img_path; 
-                        $inc++;
-                    }
-                }
-
-                $inc = 0;
-                $comment = null;
-                foreach ($Comments as $comm) { // Encontrar todos los commentarios que le pertenecen a la publicacion
-                    if ($comm->publish_Id === $public->id) {
-                        if ($comm->user_Id === $user->id) { // Encontrar al usuario que le pertenece el comentario
-                            $comment[$inc] = [
-                                "name" => $user->name,
-                                "profile_photo_path" => $user->profile_photo_path,
-                                "comment" => $comm->comment,
-                                "updated_at" => $comm->updated_at
-                            ];
-                        } else {
-                            $usr = User::find($comm->user_Id);
-                            $comment[$inc] = [
-                                "name" => $usr->name,
-                                "profile_photo_path" => $usr->profile_photo_path,
-                                "comment" => $comm->comment,
-                                "updated_at" => $comm->updated_at
-                            ];
-                        }
-                        $inc++;
-                    }
-                }
-
-                // creacion del objeto que contendra toda la informacion de la publicacion
-                $publication[$i] = array_merge(
-                    [
-                        "user" => [
-                            "name" => $user->name,
-                            "profile_photo_path" => $user->profile_photo_path
-                        ]
-                    ],
-                    [
-                        "publication" => [
-                            "id" => $public->id,
-                            "title" => $public->title,
-                            "description" => $public->description,
-                            "updated_at" => $public->updated_at
-                        ]
-                    ],
-                    [
-                        "images" => $image
-                    ],
-                    [
-                        "comments" => $comment
-                    ],
-                    [
-                        "auth" => [
-                            "profile_photo_path" => $auth->profile_photo_path
-                        ]
-                    ]
-                );
-                $i++;
+            $inc = 0;
+            $image = null;
+            $Images = DB::table('images')->where('publish_Id','=',$public->id)->where('status','=','1')->get();
+            foreach ($Images as $img) { // Encontrar todas las imagenes que le pertenecen a la publicacion
+                // if ($img->publish_Id === $public->id && $img->status === 1) {
+                    $image[$inc] = $img->img_path; 
+                    $inc++;
+                // }
             }
+            $num_img = $inc;
+            // dd($image);
+
+            $inc = 0;
+            $comment = null;
+            $Comments = DB::table('comments')->where('publish_Id','=',$public->id)->get();
+            foreach ($Comments as $comm) { // Encontrar todos los commentarios que le pertenecen a la publicacion
+                // if ($comm->publish_Id === $public->id) {
+                    if ($comm->user_Id === $user->id) { // Encontrar al usuario que le pertenece el comentario
+                        $comment[$inc] = [
+                            "name" => $user->name,
+                            "profile_photo_path" => $user->profile_photo_path,
+                            "comment" => $comm->comment,
+                            "updated_at" => $comm->updated_at
+                        ];
+                    } else {
+                        $usr = User::find($comm->user_Id);
+                        $comment[$inc] = [
+                            "name" => $usr->name,
+                            "profile_photo_path" => $usr->profile_photo_path,
+                            "comment" => $comm->comment,
+                            "updated_at" => $comm->updated_at
+                        ];
+                    }
+                    $inc++;
+                // }
+            }
+
+            $publication[$i] = array_merge( // creacion del objeto que contendra toda la informacion de la publicacion
+                [
+                    "user" => [
+                        "name" => $user->name,
+                        "profile_photo_path" => $user->profile_photo_path
+                    ]
+                ],
+                [
+                    "publication" => [
+                        "id" => $public->id,
+                        "title" => $public->title,
+                        "description" => $public->description,
+                        "updated_at" => $public->updated_at
+                    ]
+                ],
+                [
+                    "images" => $image
+                ],
+                [
+                    "numero_de_imagenes" => $num_img
+                ],
+                [
+                    "comments" => $comment
+                ],
+                [
+                    "auth" => [
+                        "profile_photo_path" => $auth->profile_photo_path
+                    ]
+                ]
+            );
+            $i++;
         }
 
         // dd($publication); // observar que informacion tiene el arreglo generado
@@ -157,7 +166,7 @@ class publicationController extends Controller
                 $message = ["status" => false]; // si no se envia la variable message marcara error / el false hace que no se muestre nada
             }
         } catch (\Throwable $th) {
-            throw $th; // expandir mensajes de error por codigo / cada falla tiene su codigo
+            // throw $th; // expandir mensajes de error por codigo / cada falla tiene su codigo
             $message = ["status" => true,"title" => "Error" ,"message" => "No se pudo crear la publicacion correctamente", "classTitle" => "bg-danger bg-gradient", "classBody" => "bg-danger bg-opacity-50", "icon" => "fas fa-exclamation-triangle"];
         } finally {
             return redirect()->route('social.index')->with($message);
@@ -232,32 +241,35 @@ class publicationController extends Controller
             // dd($request);
 
             $public = Publication::find($id);
-
-            $public->title = $data['title'];
-            $public->description = $data['description'];
-            if ($request->hasFile('image')) {
-                $Images = Image::all();
-                foreach ($Images as $img ) {
-                    if ($img->publish_Id === $public->id && $img->status === 1) {
-                        $img->status = 0;
-                        $img->save();
+            if ($public->title != $data['title'] || $public->description != $data['description'] || $request->hasFile('image')) {
+                $public->title = $data['title'];
+                $public->description = $data['description'];
+                if ($request->hasFile('image')) {
+                    $Images = Image::all();
+                    foreach ($Images as $img ) {
+                        if ($img->publish_Id === $public->id && $img->status === 1) {
+                            $img->status = 0;
+                            $img->save();
+                        }
+                    }
+                    $i = 0;
+                    foreach ($data['image'] as $image) { // Obtencion de la direccion de cada imagen recibida / cada una de las direcciones se guardan en un arreglo
+                        $img_path = $image->store('media-publication','public');
+                        $path['featured_image_url'][$i] = $img_path;
+                        $i++;
                     }
                 }
-                $i = 0;
-                foreach ($data['image'] as $image) { // Obtencion de la direccion de cada imagen recibida / cada una de las direcciones se guardan en un arreglo
-                    $img_path = $image->store('media-publication','public');
-                    $path['featured_image_url'][$i] = $img_path;
-                    $i++;
+                if (isset($path['featured_image_url'])) {
+                    foreach ($path['featured_image_url'] as $url) {
+                        $dataImg = array_merge(["img_path" => $url],["publish_Id" => $public->id]);
+                        Image::create($dataImg);
+                    }
                 }
+                $public->save();
+                $message = ["status" => true,"title" => "Exito" ,"message" => "La publicacion se modifico con exito", "classTitle" => "bg-info bg-gradient", "classBody" => "bg-info bg-opacity-50", "icon" => "fas fa-check-circle"];
+            }else {
+                $message = ["status" => true,"title" => "Sin cambios" ,"message" => "no hubo ningun cambio en la publicacion", "classTitle" => "bg-light bg-gradient", "classBody" => "bg-light bg-opacity-50", "icon" => "fas fa-check-circle"];
             }
-            if (isset($path['featured_image_url'])) {
-                foreach ($path['featured_image_url'] as $url) {
-                    $dataImg = array_merge(["img_path" => $url],["publish_Id" => $public->id]);
-                    Image::create($dataImg);
-                }
-            }
-            $public->save();
-            $message = ["status" => true,"title" => "Exito" ,"message" => "La publicacion se modifico con exito", "classTitle" => "bg-info bg-gradient", "classBody" => "bg-info bg-opacity-50", "icon" => "fas fa-check-circle"];
         } catch (\Throwable $th) {
             // throw $th;
             $message = ["status" => true,"title" => "Error" ,"message" => "No se pudo actualizar la publicacion correctamente", "classTitle" => "bg-warning bg-gradient", "classBody" => "bg-warning bg-opacity-50", "icon" => "fas fa-exclamation-triangle"];

@@ -3,7 +3,7 @@ function previewFiles() {
 
     let preview = document.querySelector('#preview');
     let files = document.querySelector('input[type=file]').files;
-    let title = document.querySelector('#title');
+    let title = document.querySelector('#imgTitle');
 
     while (preview.hasChildNodes()) { // Eliminar las imagenes existentes al seleccionar nuevas
         preview.removeChild(preview.firstChild);

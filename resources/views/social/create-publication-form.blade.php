@@ -9,7 +9,7 @@
         </h2>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
-                <a href="{{ route('social.index') }}" class="text-decoration-none">{{ __('Publicaciones') }}</a>
+                <a href="{{ route('social.index',['order'=>'0']) }}" class="text-decoration-none">{{ __('Publicaciones') }}</a>
             </li>
             <li class="breadcrumb-item active">
             @if($cnd)
@@ -45,7 +45,7 @@
                                     <x-jet-label for="created_at" value="{{ __('Fecha de creacion') }}" class="form-label" />
                                     <x-jet-input id="created_at" name="created_at" type="text" class="mt-1 block w-full form-control" placeholder="{{ $publication['publication']['created_at'] }}" disabled/>
                                 </div>
-                                @if( $publication['publication']['created_at'] === $publication['publication']['updated_at'] )
+                                @if( $publication['publication']['created_at'] !== $publication['publication']['updated_at'] )
                                 <div class="row mt-4">
                                     <x-jet-label for="updated_at" value="{{ __('Ultima modificacion') }}" class="form-label" />
                                     <x-jet-input id="updated_at" name="updated_at" type="text" class="mt-1 block w-full form-control" placeholder="{{ $publication['publication']['updated_at'] }}" disabled/>
@@ -76,14 +76,14 @@
                                 <input type="file" name="image[]" id="image[]" class="form-control border-gray-300 rounded-md shadow-sm" value="@if($cnd) @if($publication['image'] != @null) @foreach($publication['image'] as $img) {{ asset('storage/'.$img) }} @endforeach @endif @endif" onchange="previewFiles()" multiple>
                             </div>
                         </div>
-                        <div>
-                            <button class="btn btn-dark"> {{ __('Guardar')}} </button>
+                        <div class="mt-4 d-grid row mx-auto">
+                            <button class="btn btn-dark col-2"> {{ __('Guardar')}} </button>
                         </div>
                     </form>
                 </div>
                 <div class="row m-3 p-3 container bg-white shadow-sm" >
                     <!-- Previsualizacion de imagenes -->
-                    <div id="title" class="d-none">
+                    <div id="imgTitle" class="d-none">
                         <h3 class="d-flex justify-content-center">{{ __('Imagenes Seleccionadas') }}</h3>
                     </div>
                     <div id="preview" class="row">

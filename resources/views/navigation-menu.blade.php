@@ -43,7 +43,7 @@
                     </div>
                 </li>
                 <li class="{{ Request::is('social','social/*') ? 'active' : '' }}">
-                    <a href="{{ route('social.index') }}" class="text-decoration-none"> 
+                    <a href="{{ route('social.index',['order'=>'0']) }}" class="text-decoration-none"> 
                         <i class="fab fa-trello"></i> 
                         <span class="nav-label">Social</span> 
                     </a>

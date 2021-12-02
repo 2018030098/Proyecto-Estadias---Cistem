@@ -5,6 +5,7 @@
     <x-slot name="slot">
         <div class="row container">
             <div class="col-9">
+                <span class="d-none" hidden>{{$inc=0}}</span>
                 @foreach($publication as $public)
                 <div class="social-feed-box shadow my-3">
                         <div class="float-end social-action dropdown">
@@ -36,11 +37,46 @@
                         <p>
                             {{ $public['publication']['description'] }}
                         </p>
-                        <div class="container">
+                        <div class="container row d-flex justify-content-center">
                             @if($public['images'] != @null)
-                                @foreach($public['images'] as $image)
-                            <img src="{{ asset('storage/'.$image) }}" alt="imagen" class="img-fluid">    
-                                @endforeach
+                                @if($public['numero_de_imagenes'] > 1)
+                                    <div id="carousel_{{$inc}}" class="carousel slide gray-bg" data-bs-ride="carousel">
+                                        <div class="carousel-indicators">
+                                        @for($i=0;$i<$public['numero_de_imagenes'];$i++)
+                                            @if($i == 0)
+                                                <button type="button" data-bs-target="#carousel_{{$inc}}" data-bs-slide-to="{{$i}}" class="active" aria-current="true" aria-label="Slide {{$i}}"></button>
+                                            @else
+                                                <button type="button" data-bs-target="#carousel_{{$inc}}" data-bs-slide-to="{{$i}}" aria-label="Slide {{$i}}"></button>
+                                            @endif
+                                        @endfor
+                                        </div>
+                                        <div class="carousel-inner">
+                                            <span class="d-none" hidden>{{$i = 0}}</span>
+                                        @foreach($public['images'] as $image)
+                                            @if($i == 0)
+                                                <div class="carousel-item active ">
+                                                    <img src="{{ asset('storage/'.$image) }}" alt="imagen" class="img-fluid" style="width: fit-content; height: 40vh; margin: 0 auto;">
+                                                </div>
+                                            @else
+                                                <div class="carousel-item ">
+                                                    <img src="{{ asset('storage/'.$image) }}" alt="imagen" class="img-fluid" style="width: fit-content; height: 40vh; margin: 0 auto;">
+                                                </div>
+                                            @endif
+                                            <span class="d-none" hidden>{{$i++}}</span>
+                                        @endforeach
+                                        </div>
+                                        <button class="carousel-dark carousel-control-prev" type="button" data-bs-target="#carousel_{{$inc}}" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Previous</span>
+                                        </button>
+                                        <button class="carousel-dark carousel-control-next" type="button" data-bs-target="#carousel_{{$inc}}" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Next</span>
+                                        </button>
+                                    </div>
+                                @else
+                                    <img src="{{ asset('storage/'.$public['images']['0']) }}" alt="imagen" class="img-fluid w-auto">
+                                @endif
                             @endif
                         </div>
                     </div>
@@ -55,7 +91,6 @@
                                 <div class="col">
                                     <a href="#" class="text-decoration-none">
                                         {{ $comment['name'] }}
-                                        
                                     </a>
                                     <span> {{ $comment['comment'] }} </span>
                                     <br/>
@@ -81,6 +116,7 @@
                         </div>
                     </div>
                 </div>
+                <span class="d-none" hidden>{{$inc++}}</span>
                 @endforeach
             </div>
             <div class="col container ms-5">
@@ -90,10 +126,15 @@
                     </div>
                     <div class="card shadow-sm rounded my-3">
                         <div class="card-header">
-                            Mecanicas
+                            Ordenar
                         </div>
                         <div class="card-body ">
-                            Configuraciones
+                            <div class="row col-6 d-grid">
+                                <a href="{{ route('social.index',['order'=>'1']) }}" class="btn btn-dark">Ascendente</a>
+                            </div>
+                            <div class="row col-6 d-grid">
+                                <a href="{{ route('social.index',['order'=>'0']) }}" class="btn btn-dark">Descendente</a>
+                            </div>
                         </div>
                     </div>
                     <div class="card shadow-sm rounded my-3">
