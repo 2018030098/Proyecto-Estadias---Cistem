@@ -15,11 +15,11 @@ class CreatePublicationsTable extends Migration
     {
         Schema::create('publications', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('description');
-            $table->timestamps();
-            $table->boolean('status')->default(true);
             $table->foreignId('user_Id')->constrained('users');
+            $table->string('title');
+            $table->longText('description');
+            $table->boolean('status')->default(true);
+            $table->timestamps();
         });
     }
 
