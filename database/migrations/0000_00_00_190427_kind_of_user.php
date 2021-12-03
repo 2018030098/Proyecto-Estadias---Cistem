@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCommentsTable extends Migration
+class KindOfUser extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateCommentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('comments', function (Blueprint $table) {
+        Schema::create('KindOfUsers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_Id')->constrained('users');
-            $table->foreignId('publication_Id')->constrained('publications');
-            $table->string('comment');
-            $table->timestamps();
+            $table->string('kind');
+            $table->string('description');
         });
+
+        
     }
 
     /**
@@ -29,6 +29,6 @@ class CreateCommentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('comments');
+        Schema::dropIfExists('KindOfUsers');
     }
 }
