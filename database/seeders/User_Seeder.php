@@ -14,6 +14,13 @@ class User_Seeder extends Seeder
      */
     public function run()
     {
-        
+        DB::table('users')->insert([
+            'name' => 'Admin',
+            'kind_Id' => '1',
+            'email' => 'admin@admin',
+            'password' => '$2y$10$yOwV6iFXQsaL4rdxZHBcvOMXCHR0K3waPAY/ht17PnR4MxhImvw.O',
+            'created_at' => '2021-01-01 00:00:00',
+            'updated_at' => '2021-01-01 00:00:00'
+        ]);
     }
 }

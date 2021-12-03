@@ -28,7 +28,10 @@ class publicationController extends Controller
             $Publications = DB::table('publications')->orderBy('updated_at','desc')->where('status','=','1')->get();
             $order = 0;
         }
-        // $Comments = Comment::all();
+        if( count($Publications) == 0){
+            $publication = 0;
+            return view('social.index', compact('publication','order'));
+        }
 
         $i = 0;
         foreach ($Publications as $public) { // filtrado de informacion / la informacion de las publicaciones se agrupan en arreglos
@@ -36,39 +39,33 @@ class publicationController extends Controller
 
             $inc = 0;
             $image = null;
-            $Images = DB::table('images')->where('publish_Id','=',$public->id)->where('status','=','1')->get();
+            $Images = DB::table('images')->where('publication_Id','=',$public->id)->where('status','=','1')->get();
             foreach ($Images as $img) { // Encontrar todas las imagenes que le pertenecen a la publicacion
-                // if ($img->publish_Id === $public->id && $img->status === 1) {
                     $image[$inc] = $img->img_path; 
                     $inc++;
-                // }
             }
             $num_img = $inc;
-            // dd($image);
-
             $inc = 0;
             $comment = null;
-            $Comments = DB::table('comments')->where('publish_Id','=',$public->id)->get();
+            $Comments = DB::table('comments')->where('publication_Id','=',$public->id)->get();
             foreach ($Comments as $comm) { // Encontrar todos los commentarios que le pertenecen a la publicacion
-                // if ($comm->publish_Id === $public->id) {
-                    if ($comm->user_Id === $user->id) { // Encontrar al usuario que le pertenece el comentario
-                        $comment[$inc] = [
-                            "name" => $user->name,
-                            "profile_photo_path" => $user->profile_photo_path,
-                            "comment" => $comm->comment,
-                            "updated_at" => $comm->updated_at
-                        ];
-                    } else {
-                        $usr = User::find($comm->user_Id);
-                        $comment[$inc] = [
-                            "name" => $usr->name,
-                            "profile_photo_path" => $usr->profile_photo_path,
-                            "comment" => $comm->comment,
-                            "updated_at" => $comm->updated_at
-                        ];
-                    }
-                    $inc++;
-                // }
+                if ($comm->user_Id === $user->id) { // Encontrar al usuario que le pertenece el comentario
+                    $comment[$inc] = [
+                        "name" => $user->name,
+                        "profile_photo_path" => $user->profile_photo_path,
+                        "comment" => $comm->comment,
+                        "updated_at" => $comm->updated_at
+                    ];
+                } else {
+                    $usr = User::find($comm->user_Id);
+                    $comment[$inc] = [
+                        "name" => $usr->name,
+                        "profile_photo_path" => $usr->profile_photo_path,
+                        "comment" => $comm->comment,
+                        "updated_at" => $comm->updated_at
+                    ];
+                }
+                $inc++;
             }
 
             if($auth->kind_Id == 1 || $auth->kind_Id == 2){
@@ -184,19 +181,21 @@ class publicationController extends Controller
                     }
                 }
                 $users = ["user_Id" => auth()->user()->id]; 
+                $data = [
+                    'title' => $data['title'],
+                    'description' => $data['description']
+                ];
                 $data = array_merge($data,$users);
                 $newPublic = (Publication::create($data)); // creacion de la publicacion / ademas guardando dicha informacion en una variable para obtener su ID
-                $newPublic = ["publish_Id" => $newPublic->id];
                 if ($request->hasFile('image')) {
                     foreach ($path['featured_image_url'] as $image) {
-                        $dataImg = array_merge(["img_path" => $image],$newPublic);
+                        $dataImg = array_merge(["img_path" => $image],["publication_Id" => $newPublic->id]);
                         Image::create($dataImg);
                     }
                 }
                 $message = ["status" => true,"title" => "Exito" ,"message" => "La publicacion se creo con exito", "class" => "bg-success", "icon" => "fas fa-check-circle"];
             }
-            elseif($request->has('comment')) {
-                // Insercion de Comentario
+            elseif($request->has('comment')) { // Insercion de Comentario
                 $data = $request->all();
                 $users = ["user_Id" => auth()->user()->id]; 
                 $data = array_merge($data,$users);
@@ -237,7 +236,7 @@ class publicationController extends Controller
         $i = 0;
         $image = null;
         foreach ($Images as $img ) {
-            if ($img->publish_Id === $public->id && $img->status === 1) {
+            if ($img->publication_Id === $public->id && $img->status === 1) {
                 $image[$i] = $img->img_path;
                 $i++;
             }
@@ -284,7 +283,7 @@ class publicationController extends Controller
                 if ($request->hasFile('image')) {
                     $Images = Image::all();
                     foreach ($Images as $img ) {
-                        if ($img->publish_Id === $public->id && $img->status === 1) {
+                        if ($img->publication_Id === $public->id && $img->status === 1) {
                             $img->status = 0;
                             $img->save();
                         }
@@ -298,7 +297,7 @@ class publicationController extends Controller
                 }
                 if (isset($path['featured_image_url'])) {
                     foreach ($path['featured_image_url'] as $url) {
-                        $dataImg = array_merge(["img_path" => $url],["publish_Id" => $public->id]);
+                        $dataImg = array_merge(["img_path" => $url],["publication_Id" => $public->id]);
                         Image::create($dataImg);
                     }
                 }
