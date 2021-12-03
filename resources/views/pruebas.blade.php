@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
-
-        <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
         <!-- Bootstrap5 -->
         <link rel="stylesheet" href="{{ asset('css/Bootstrap/bootstrap.min.css') }}">
@@ -18,43 +17,30 @@
         <!-- Gritter -->
         <link rel="stylesheet" href="{{ asset('css/plugins/gritter/jquery.gritter.css') }}">
 
-        <!-- iCheck -->
-        <link rel="stylesheet" href="{{ asset('css/plugins/iCheck/custom.css') }}">
-
         <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
         <link rel="stylesheet" href="{{ asset('css/style.css') }}">
         <link rel="stylesheet" href="{{ asset('css/MyStyles.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/plugins/awesome-bootstrap-checkbox.css') }}">
-
-        @livewireStyles
-    </head>
-    <body @if (session('status')) { onload="toastmessage()"  }@endif> <!-- class="font-sans antialiased"> -->
-
-        @livewire('navigation-menu')
-
-                <!-- Page Heading -->
-                @if (isset($header))
-                    <header class="max-w-7xl bg-white mx-auto py-6 px-4 sm:px-6 lg:px-8 shadow">
-                        {{ $header }}
-                    </header>
-                    
-
-                @endif
-
-                <!-- Page Content -->
-                <main>
-                    {{ $slot }}
-                </main>
-            </div>
-
-            @stack('modals')
-
-        </div>
-            <!-- Scripts -->
-        @livewireScripts
-
-        
-        <script src="{{ mix('js/app.js') }}" defer></script>
+        <link rel="stylesheet" href="{{ asset('css/plugins/iCheck/custom.css') }}">
+</head>
+<body class="gray-bg p-5">
+    <h2 class="font-semibold text-xl text-gray-800 leading-tight"> {{ __('Pruebas') }} </h2>
+    <hr>
+    <form action="{{ route('prueba.shows') }}" method="get">
+        <button type="submit" class="form-check">
+            <input class="form-check-input abc-radio-primary" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
+            <label class="form-check-label" for="exampleRadios1">
+                Default radio
+            </label>
+        </button>
+        <button type="submit" class="form-check">
+            <input class="form-check-input abc-radio-primary" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
+            <label class="form-check-label" for="exampleRadios2">
+                Second default radio
+            </label>
+        </button>
+    </form>
+<hr>
+    <script src="{{ mix('js/app.js') }}" defer></script>
 
         <!-- Mainly scripts -->
         <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -77,8 +63,8 @@
         <!-- toastr (notificaciones) -->
         <script src="{{ asset('https://kit.fontawesome.com/6aa6c40f89.js') }}"></script>
 
-        <!-- iCheck (check buttons)-->
+        <!-- iCheck (Check buttons) -->
         <script src="{{ asset('js/iCheck/icheck.min.js') }}"></script>
-        
-    </body>
+</body>
 </html>
+

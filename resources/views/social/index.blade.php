@@ -7,15 +7,15 @@
             <div class="col-9">
                 <span class="d-none" hidden>{{$inc=0}}</span>
                 @foreach($publication as $public)
-                <div class="social-feed-box shadow my-3">
+                <div class="social-feed-box shadow my-3 animated fadeInDown">
                         <div class="float-end social-action dropdown">
-                            <button type="button" class="btn btn-dark dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent"></button>
+                            <button type="button" class="btn btn-light dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent"></button>
                             <ul class="dropdown-menu m-t-xs">
                                 <li><a class="dropdown-item" href="{{ route('social.edit',$public['publication']['id']) }}">{{ __('Modificar') }}</a></li>
                                 <li><a class="dropdown-item" href="{{-- route('social.destroy',$public['publication']['id']) --}}" disabled>{{ __('Eliminar') }}</a></li>
                             </ul>
                         </div>
-                    <div class="social-avatar">                                    
+                    <div class="social-avatar">
                         <div class="media-body row">
                             <div class="col-auto row">
                                 <div class="col">
@@ -40,7 +40,7 @@
                         <div class="container row d-flex justify-content-center">
                             @if($public['images'] != @null)
                                 @if($public['numero_de_imagenes'] > 1)
-                                    <div id="carousel_{{$inc}}" class="carousel slide gray-bg" data-bs-ride="carousel">
+                                    <div id="carousel_{{$inc}}" class="carousel slide" data-bs-ride="carousel">
                                         <div class="carousel-indicators">
                                         @for($i=0;$i<$public['numero_de_imagenes'];$i++)
                                             @if($i == 0)
@@ -55,22 +55,22 @@
                                         @foreach($public['images'] as $image)
                                             @if($i == 0)
                                                 <div class="carousel-item active ">
-                                                    <img src="{{ asset('storage/'.$image) }}" alt="imagen" class="img-fluid" style="width: fit-content; height: 40vh; margin: 0 auto;">
+                                                    <img src="{{ asset('storage/'.$image) }}" alt="imagen" class="img-fluid" style="width: fit-content; height: 60vh; margin: 0 auto;">
                                                 </div>
                                             @else
                                                 <div class="carousel-item ">
-                                                    <img src="{{ asset('storage/'.$image) }}" alt="imagen" class="img-fluid" style="width: fit-content; height: 40vh; margin: 0 auto;">
+                                                    <img src="{{ asset('storage/'.$image) }}" alt="imagen" class="img-fluid" style="width: fit-content; height: 60vh; margin: 0 auto;">
                                                 </div>
                                             @endif
                                             <span class="d-none" hidden>{{$i++}}</span>
                                         @endforeach
                                         </div>
-                                        <button class="carousel-dark carousel-control-prev" type="button" data-bs-target="#carousel_{{$inc}}" data-bs-slide="prev">
-                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <button class="carousel-control-prev" type="button" data-bs-target="#carousel_{{$inc}}" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon bg-dark bg-opacity-75" aria-hidden="true"></span>
                                             <span class="visually-hidden">Previous</span>
                                         </button>
-                                        <button class="carousel-dark carousel-control-next" type="button" data-bs-target="#carousel_{{$inc}}" data-bs-slide="next">
-                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <button class="carousel-control-next" type="button" data-bs-target="#carousel_{{$inc}}" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon bg-dark bg-opacity-75" aria-hidden="true"></span>
                                             <span class="visually-hidden">Next</span>
                                         </button>
                                     </div>
@@ -122,20 +122,27 @@
             <div class="col container ms-5">
                 <div class="position-sticky">
                     <div class="d-flex justify-content-center my-5">
-                        <a href="{{ route('social.create') }}" class="btn btn-success">Crear nueva publicacion</a>
+                        <a href="{{ route('social.create') }}" class="btn btn-success btn-rounded btn-lg h3">Crear nueva publicacion</a>
                     </div>
-                    <div class="card shadow-sm rounded my-3">
+                    <div class="card shadow-sm rounded my-3 d-flex">
                         <div class="card-header">
-                            Ordenar
+                            Orden
                         </div>
-                        <div class="card-body ">
-                            <div class="row col-6 d-grid">
-                                <a href="{{ route('social.index',['order'=>'1']) }}" class="btn btn-dark">Ascendente</a>
-                            </div>
-                            <div class="row col-6 d-grid">
-                                <a href="{{ route('social.index',['order'=>'0']) }}" class="btn btn-dark">Descendente</a>
-                            </div>
-                        </div>
+                        <form action="{{ route('social.index') }}" method="GET" class="p-3">
+                            @csrf
+                            <button type="submit" class="form-check my-2 abc-radio-primary">
+                                <input class="form-check-input iCheck" type="radio" name="order" id="order_desc" value="0" @if($order == 0) checked @endif>
+                                <label class="form-check-label" for="order_desc">
+                                    Descendente
+                                </label>
+                            </button>
+                            <button type="submit" class="form-check my-2 abc-radio-primary">
+                                <input class="form-check-input iCheck" type="radio" name="order" id="order_asc" value="1" @if($order == 1) checked @endif>
+                                <label class="form-check-label" for="order_asc">
+                                    Ascendente
+                                </label>
+                            </button>
+                        </form>
                     </div>
                     <div class="card shadow-sm rounded my-3">
                         <div class="card-header">
@@ -151,24 +158,40 @@
 
         <!--  -->   <!--  -->   <!--  -->   <!--  -->   <!--  -->   <!--  -->   <!--  -->   <!--  -->   <!--  -->
         @if(session('status'))
-            <div style="position: absolute; top: 20px; right: 20px;">
-                <div class="alert alert-dismissible" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div class="toast-header {{ session('classTitle') }}">
-                        <div class="col"> 
-                            <i class="{{ session('icon') }}"> </i>
-                            <strong class="mr-auto m-l-sm">{{ session('title') }}</strong> 
-                        </div>
-                        <div class="col-auto">
-                            <button type="button" class="ml-2 mb-1 close" data-bs-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
+            <div class="alert alert-dismissible animated d-none shadow-sm {{ session('class') }}" role="alert" aria-live="assertive" aria-atomic="true" id="loadToast" style="position: absolute; top: 20px; right: 20px;">
+                <div class="alert-heading row">
+                    <div class="col-10">
+                        <i class="{{ session('icon') }}"></i>
+                        <strong class="mr-auto m-l-sm">   {{ session('title') }}   </strong>
                     </div>
-                    <div class="toast-body {{ session('classBody') }}">
-                        {{ session('message') }}
+                    <div class="col-2">
+                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close" onclick="closeToast()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
+                </div>
+                <hr>
+                <div>
+                    {{ session('message') }}
                 </div>
             </div>
         @endif
+        <script>
+            $(document).ready(function(){
+                $('input').iCheck({
+                    checkboxClass: 'icheckbox_square',
+                    radioClass: 'iradio_square',
+                    increaseArea: '20%' // optional
+                });
+            });
+
+            $(document).ready(function(){
+                $('input').iCheck({
+                    checkboxClass: 'icheckbox_square',
+                    radioClass: 'iradio_square',
+                    increaseArea: '20%' // optional
+                });
+            });
+        </script>
     </x-slot>
 </x-app-layout>

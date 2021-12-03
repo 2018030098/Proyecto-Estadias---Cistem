@@ -8,5 +8,11 @@ use Illuminate\Http\Request;
 class pruebasController extends Controller
 {
     public function prueba(){
+        return view('pruebas');
+    }
+
+    public function shows(Request $request){
+        dd($_GET);
+        dd($request);
     }
 }

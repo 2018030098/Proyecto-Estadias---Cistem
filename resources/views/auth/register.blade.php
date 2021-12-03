@@ -57,30 +57,24 @@
                 <a href="{{ route('login') }}" class="text-muted text-center text-decoration-none">Ya tengo cuenta</a>
             </div>
         </div>
+        @if(session('status'))
+            <div class="alert alert-dismissible animated d-none shadow-sm {{ session('class') }}" role="alert" aria-live="assertive" aria-atomic="true" id="loadToast" style="position: absolute; top: 20px; right: 20px;">
+                <div class="alert-heading row">
+                    <div class="col-10">
+                        <i class="{{ session('icon') }}"></i>
+                        <strong class="mr-auto m-l-sm">   {{ session('title') }}   </strong>
+                    </div>
+                    <div class="col-2">
+                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close" onclick="closeToast()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+                <hr>
+                <div>
+                    {{ session('message') }}
+                </div>
+            </div>
+        @endif
     </x-jet-authentication-card>
 </x-guest-layout>
-@if($errors->has('email'))
-    <div style="position: absolute; top: 20px; right: 20px;">
-        <div class="alert alert-dismissible" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header bg-danger bg-gradient">
-                <div class="col"> 
-                    <i class="fas fa-exclamation-triangle"> </i>
-                    <strong class="mr-auto m-l-sm">{{ __('Error') }}</strong> 
-                </div>
-                <div class="col-auto">
-                    <button type="button" class="ml-2 mb-1 close" data-bs-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i></span>
-                    </button>
-                </div>
-            </div>
-            <div class="toast-body bg-danger bg-opacity-50">
-            @foreach($errors->all() as $error)
-                <ul>
-                    <i class="fas fa-exclamation-circle"> </i>
-                    <span>{{ $error }}</span>
-                </ul>
-            @endforeach
-            </div>
-        </div>
-    </div>
-@endif

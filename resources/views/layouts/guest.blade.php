@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="{{ asset('css/MyStyles.css') }}">
 
 </head>
-<body class="bg-secondary d-flex align-items-center justify-content-center animated fadeInDown">
+<body class="bg-secondary d-flex align-items-center justify-content-center animated fadeInDown" @if (session('status')) { onload="toastmessage()"  }@endif>
     <div>
         {{ $slot }}
     </div>
@@ -22,9 +22,10 @@
 
         <!-- Mainly scripts -->
         <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-        <script src="{{ asset('js/popper2.min.js') }}"></script>
+        <script src="{{ asset('js/popper.min.js') }}"></script>
         <script src="{{ asset('js/Bootstrap/bootstrap.min.js') }}"></script>
         <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script> -->
+        <script src="{{ asset('js/toast-message.js') }}"></script>
 
         <script src="{{ asset('js/metisMenu/jquery.metisMenu.js') }}"></script>
         <script src="{{ asset('js/slimscroll/jquery.slimscroll.min.js') }}"></script>
@@ -39,12 +40,5 @@
 
         <!-- toastr (notificaciones) -->
         <script src="{{ asset('https://kit.fontawesome.com/6aa6c40f89.js') }}"></script>
-    
-        <!-- cropper (img) -->
-        <script src="js/plugins/cropper/cropper.min.js"></script>
-
-            <!-- Mis scripts -->
-        <!-- notificacion -->
-        <script src="{{ asset('js/MyScripts/notificacion.js') }}"></script>
 </body>
 </html>

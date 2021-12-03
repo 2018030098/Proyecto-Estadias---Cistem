@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\pruebasController; //eliminar
 use App\Http\Controllers\publicationController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\pruebasController; //eliminar
 
 /*
 |--------------------------------------------------------------------------
@@ -25,5 +25,7 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 
 Route::middleware('auth')->group(function () {
     Route::resource('/social', publicationController::class);
+    Route::put('/social/{id}/{status}', [publicationController::class, 'status'])->name('changeStatus');
     Route::get('/prueba',[pruebasController::class, 'prueba'])->name('prueba'); //eliminar
+    Route::get('/prueba.shows',[pruebasController::class, 'shows'])->name('prueba.shows'); //eliminar
 });

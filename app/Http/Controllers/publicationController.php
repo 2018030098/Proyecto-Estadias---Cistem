@@ -15,21 +15,20 @@ class publicationController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
+     * 
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        // Obtencion de la informacion de la base de datos               
-        if (isset($_GET['order']) && $_GET['order'] == 1) {
+        $auth = auth()->user();
+        if (isset($_GET['order']) && $_GET['order'] == 1) { // Obtencion de la informacion de la base de datos
             $Publications = DB::table('publications')->orderBy('updated_at','asc')->where('status','=','1')->get();
+            $order = 1;
         }else{
             $Publications = DB::table('publications')->orderBy('updated_at','desc')->where('status','=','1')->get();
+            $order = 0;
         }
         // $Comments = Comment::all();
-        $auth = auth()->user();
-
-        // dd($Publications);
 
         $i = 0;
         foreach ($Publications as $public) { // filtrado de informacion / la informacion de las publicaciones se agrupan en arreglos
@@ -72,41 +71,78 @@ class publicationController extends Controller
                 // }
             }
 
-            $publication[$i] = array_merge( // creacion del objeto que contendra toda la informacion de la publicacion
-                [
-                    "user" => [
-                        "name" => $user->name,
-                        "profile_photo_path" => $user->profile_photo_path
+            if($auth->kind_Id == 1 || $auth->kind_Id == 2){
+                $publication[$i] = array_merge( // creacion del objeto que contendra toda la informacion de la publicacion
+                    [
+                        "user" => [
+                            "name" => $user->name,
+                            "profile_photo_path" => $user->profile_photo_path
+                        ]
+                    ],
+                    [
+                        "publication" => [
+                            "id" => $public->id,
+                            "title" => $public->title,
+                            "description" => $public->description,
+                            "updated_at" => $public->updated_at
+                        ]
+                    ],
+                    [
+                        "images" => $image
+                    ],
+                    [
+                        "numero_de_imagenes" => $num_img
+                    ],
+                    [
+                        "comments" => $comment
+                    ],
+                    [
+                        "auth" => [
+                            "profile_photo_path" => $auth->profile_photo_path
+                        ]
                     ]
-                ],
-                [
-                    "publication" => [
-                        "id" => $public->id,
-                        "title" => $public->title,
-                        "description" => $public->description,
-                        "updated_at" => $public->updated_at
-                    ]
-                ],
-                [
-                    "images" => $image
-                ],
-                [
-                    "numero_de_imagenes" => $num_img
-                ],
-                [
-                    "comments" => $comment
-                ],
-                [
-                    "auth" => [
-                        "profile_photo_path" => $auth->profile_photo_path
-                    ]
-                ]
-            );
-            $i++;
+                );
+                $i++;
+            }elseif ($auth->kind_Id == 3) {
+                if ($user->kind_Id == 1 || $user->kind_Id == 2 || $user->id == $auth->id) {
+                    $publication[$i] = array_merge( // creacion del objeto que contendra toda la informacion de la publicacion
+                        [
+                            "user" => [
+                                "name" => $user->name,
+                                "profile_photo_path" => $user->profile_photo_path
+                            ]
+                        ],
+                        [
+                            "publication" => [
+                                "id" => $public->id,
+                                "title" => $public->title,
+                                "description" => $public->description,
+                                "updated_at" => $public->updated_at
+                            ]
+                        ],
+                        [
+                            "images" => $image
+                        ],
+                        [
+                            "numero_de_imagenes" => $num_img
+                        ],
+                        [
+                            "comments" => $comment
+                        ],
+                        [
+                            "auth" => [
+                                "profile_photo_path" => $auth->profile_photo_path
+                            ]
+                        ]
+                    );
+                    $i++;
+                }
+            }
+
         }
 
         // dd($publication); // observar que informacion tiene el arreglo generado
-        return view('social.index', compact('publication'));
+        return view('social.index', compact('publication','order'));
     }
 
     /**
@@ -151,11 +187,13 @@ class publicationController extends Controller
                 $data = array_merge($data,$users);
                 $newPublic = (Publication::create($data)); // creacion de la publicacion / ademas guardando dicha informacion en una variable para obtener su ID
                 $newPublic = ["publish_Id" => $newPublic->id];
-                foreach ($path['featured_image_url'] as $image) {
-                    $dataImg = array_merge(["img_path" => $image],$newPublic);
-                    Image::create($dataImg);
+                if ($request->hasFile('image')) {
+                    foreach ($path['featured_image_url'] as $image) {
+                        $dataImg = array_merge(["img_path" => $image],$newPublic);
+                        Image::create($dataImg);
+                    }
                 }
-                $message = ["status" => true,"title" => "Exito" ,"message" => "La publicacion se creo con exito", "classTitle" => "bg-success bg-gradient", "classBody" => "bg-success bg-opacity-50", "icon" => "fas fa-check-circle"];
+                $message = ["status" => true,"title" => "Exito" ,"message" => "La publicacion se creo con exito", "class" => "bg-success", "icon" => "fas fa-check-circle"];
             }
             elseif($request->has('comment')) {
                 // Insercion de Comentario
@@ -166,8 +204,8 @@ class publicationController extends Controller
                 $message = ["status" => false]; // si no se envia la variable message marcara error / el false hace que no se muestre nada
             }
         } catch (\Throwable $th) {
-            // throw $th; // expandir mensajes de error por codigo / cada falla tiene su codigo
-            $message = ["status" => true,"title" => "Error" ,"message" => "No se pudo crear la publicacion correctamente", "classTitle" => "bg-danger bg-gradient", "classBody" => "bg-danger bg-opacity-50", "icon" => "fas fa-exclamation-triangle"];
+            throw $th; // expandir mensajes de error por codigo / cada falla tiene su codigo
+            $message = ["status" => true,"title" => "Error" ,"message" => "No se pudo crear la publicacion correctamente", "class" => "bg-danger", "icon" => "fas fa-exclamation-triangle"];
         } finally {
             return redirect()->route('social.index')->with($message);
         }
@@ -204,7 +242,6 @@ class publicationController extends Controller
                 $i++;
             }
         }
-        
         $publication = [
             "user" => [
                 "name" => $user->name,
@@ -237,10 +274,10 @@ class publicationController extends Controller
     {
         try {
             $data = $request->all();
-
-            // dd($request);
-
             $public = Publication::find($id);
+            if ($public->status) {
+                # code...
+            }
             if ($public->title != $data['title'] || $public->description != $data['description'] || $request->hasFile('image')) {
                 $public->title = $data['title'];
                 $public->description = $data['description'];
@@ -266,14 +303,35 @@ class publicationController extends Controller
                     }
                 }
                 $public->save();
-                $message = ["status" => true,"title" => "Exito" ,"message" => "La publicacion se modifico con exito", "classTitle" => "bg-info bg-gradient", "classBody" => "bg-info bg-opacity-50", "icon" => "fas fa-check-circle"];
+                $message = ["status" => true,"title" => "Exito" ,"message" => "La publicacion se modifico con exito", "class" => "bg-success", "icon" => "fas fa-check-circle"];
             }else {
-                $message = ["status" => true,"title" => "Sin cambios" ,"message" => "no hubo ningun cambio en la publicacion", "classTitle" => "bg-light bg-gradient", "classBody" => "bg-light bg-opacity-50", "icon" => "fas fa-check-circle"];
+                $message = ["status" => true,"title" => "Sin cambios" ,"message" => "no hubo ningun cambio en la publicacion", "class" => "bg-light", "icon" => "fas fa-check-circle"];
             }
         } catch (\Throwable $th) {
             // throw $th;
-            $message = ["status" => true,"title" => "Error" ,"message" => "No se pudo actualizar la publicacion correctamente", "classTitle" => "bg-warning bg-gradient", "classBody" => "bg-warning bg-opacity-50", "icon" => "fas fa-exclamation-triangle"];
+            $message = ["status" => true,"title" => "Error" ,"message" => "No se pudo actualizar la publicacion correctamente", "class" => "bg-warning", "icon" => "fas fa-exclamation-triangle"];
         } finally {
+            return redirect()->route('social.index')->with($message);
+        }
+    }
+
+
+    /**
+     * Cambia el estado de una publicacion
+     * 
+     * @param int $id
+     * @param int $status
+     */
+    public function status($id,$status){
+        $data = Publication::find($id);
+        try {
+            $data->status = $status;
+            $data->save();
+            $message = ["status" => true,"title" => "Exito" ,"message" => "La publicacion se modifico con exito", "class" => "bg-success", "icon" => "fas fa-check-circle"];
+        } catch (\Throwable $th) {
+            // throw $th;
+            $message = ["status" => true,"title" => "Error" ,"message" => "No se pudo cambiar el estado <br> Porfavor vuelvalo a intentar", "class" => "bg-warning", "icon" => "fas fa-exclamation-triangle"];
+        } finally{
             return redirect()->route('social.index')->with($message);
         }
     }

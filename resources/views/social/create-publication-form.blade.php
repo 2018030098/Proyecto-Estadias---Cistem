@@ -77,7 +77,10 @@
                             </div>
                         </div>
                         <div class="mt-4 d-grid row mx-auto">
-                            <button class="btn btn-dark col-2"> {{ __('Guardar')}} </button>
+                            <button type="submit" class="btn btn-dark col-2"> {{ __('Guardar')}} </button>
+                            @if($cnd)
+                                <span class="btn btn-danger col-2 ms-auto" data-bs-toggle="modal" data-bs-target="#exampleModal">Completar</span>
+                            @endif
                         </div>
                     </form>
                 </div>
@@ -101,5 +104,32 @@
             </div>
         </div>
         <script src="{{ asset('js/img/preview-img.js') }}"></script>
+        @if($cnd)
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Cambiar estado de la publicacion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Al cambiar el estado de la publicacion 
+                    <br>
+                    estarias diciendo que el tema tratado en la publicacion se ha completado, por lo que esta yo no apareceria mas dentro de las demas publicaciones
+                    <br>
+                    ¿Estas seguro que desea marcar como completado el tema de la publicacion?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <form action="{{ route('changeStatus', [$publication['publication']['id'],$publication['publication']['status']=0] ) }}" method="post">
+                        @method('PUT')
+                        @csrf
+                        <button type="submit" class="btn btn-primary">Cambiar estado</button>
+                    </form>
+                </div>
+                </div>
+            </div>
+        </div>
+        @endif
     </x-slot>
 </x-app-layout>
