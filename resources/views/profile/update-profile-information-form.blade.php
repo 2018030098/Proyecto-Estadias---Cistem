@@ -3,11 +3,11 @@
         <div class="row">
             <div class="col-3">
                 <x-slot name="title">
-                    {{ __('Profile Information') }}
+                    {{ __('Informacion de usuario') }}
                 </x-slot>
 
                 <x-slot name="description">
-                    {{ __('Update your account\'s profile information and email address.') }}
+                    {{ __('Actualiza tu informacion de usuario, desde el nombre, correo y foto de perfil') }}
                 </x-slot>
             </div>
             <div class="col-6">
@@ -79,11 +79,11 @@
                 </div>
                 <x-slot name="actions">
                     <x-jet-action-message class="mr-3" on="saved">
-                        {{ __('Saved.') }}
+                        {{ __('Guardado.') }}
                     </x-jet-action-message>
                     
                     <x-jet-button wire:loading.attr="disabled" wire:target="photo">
-                        {{ __('Save') }}
+                        {{ __('Guardar') }}
                     </x-jet-button>
                 </x-slot>
             </div>

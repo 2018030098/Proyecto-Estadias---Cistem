@@ -182,22 +182,5 @@
                 </div>
             </div>
         @endif
-        <script>
-            $(document).ready(function(){
-                $('input').iCheck({
-                    checkboxClass: 'icheckbox_square',
-                    radioClass: 'iradio_square',
-                    increaseArea: '20%' // optional
-                });
-            });
-
-            $(document).ready(function(){
-                $('input').iCheck({
-                    checkboxClass: 'icheckbox_square',
-                    radioClass: 'iradio_square',
-                    increaseArea: '20%' // optional
-                });
-            });
-        </script>
     </x-slot>
 </x-app-layout>

@@ -77,7 +77,10 @@
                             </div>
                         </div>
                         <div class="mt-4 d-grid row mx-auto">
-                            <button type="submit" class="btn btn-dark col-2"> {{ __('Guardar')}} </button>
+                            <div class="col-4">
+                                <button type="submit" class="btn btn-dark col-5 me-2"> {{ __('Guardar')}} </button>
+                                <a href="{{ route('social.index',['order'=>'0']) }}" class="btn btn-secondary col-4"> Cancelar </a>
+                            </div>
                             @if($cnd)
                                 <span class="btn btn-danger col-2 ms-auto" data-bs-toggle="modal" data-bs-target="#exampleModal">Completar</span>
                             @endif
@@ -91,13 +94,42 @@
                     </div>
                     <div id="preview" class="row">
                         @if($cnd)
-                        @if($publication['image'] != @null)
-                            @foreach( $publication['image'] as $img)
-                        <div class="col-auto">
-                            <img src="{{ asset('storage/'.$img) }}" alt="imagen" class="img-thumbnail">
-                        </div>
-                            @endforeach
-                        @endif
+                            @if($publication['image'] != @null)
+                            <div id="carousel" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-indicators">
+                                    @for($i=0; $i < count($publication['image']); $i++ )
+                                    @if($i == 0)
+                                        <button type="button" data-bs-target="#carousel" data-bs-slide-to="{{$i}}" class="active" aria-current="true" aria-label="Slide {{$i}}"></button>
+                                    @else 
+                                        <button type="button" data-bs-target="#carousel" data-bs-slide-to="{{$i}}" aria-label="Slide {{$i}}"></button>
+                                    @endif
+                                    @endfor
+                                </div>
+                                <div class="carousel-inner">
+                                    <span class="d-none" hidden>{{$i = 0}}</span>
+                                    @foreach( $publication['image'] as $img)
+                                    @if($i == 0)
+                                        <div class="carousel-item active">
+                                            <img src="{{ asset('storage/'.$img) }}" alt="imagen" class="img-fluid" style="width: fit-content; height: 80vh; margin: 0 auto;">
+                                        </div>
+                                    @else
+                                        <div class="carousel-item">
+                                            <img src="{{ asset('storage/'.$img) }}" alt="imagen" class="img-fluid" style="width: fit-content; height: 80vh; margin: 0 auto;">
+                                        </div>
+                                    @endif
+                                        <span class="d-none" hidden>{{$i++}}</span>
+                                    @endforeach
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon bg-dark bg-opacity-75" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon bg-dark bg-opacity-75" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                            @endif
                         @endif
                     </div>
                 </div>
@@ -108,25 +140,25 @@
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Cambiar estado de la publicacion</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Al cambiar el estado de la publicacion 
-                    <br>
-                    estarias diciendo que el tema tratado en la publicacion se ha completado, por lo que esta yo no apareceria mas dentro de las demas publicaciones
-                    <br>
-                    ¿Estas seguro que desea marcar como completado el tema de la publicacion?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <form action="{{ route('changeStatus', [$publication['publication']['id'],$publication['publication']['status']=0] ) }}" method="post">
-                        @method('PUT')
-                        @csrf
-                        <button type="submit" class="btn btn-primary">Cambiar estado</button>
-                    </form>
-                </div>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Cambiar estado de la publicacion</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Al cambiar el estado de la publicacion 
+                        <br>
+                        estarias diciendo que el tema tratado en la publicacion se ha completado, por lo que esta yo no apareceria mas dentro de las demas publicaciones
+                        <br>
+                        ¿Estas seguro que desea marcar como completado el tema de la publicacion?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <form action="{{ route('changeStatus', [$publication['publication']['id'],$publication['publication']['status']=0] ) }}" method="post">
+                            @method('PUT')
+                            @csrf
+                            <button type="submit" class="btn btn-primary">Cambiar estado</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

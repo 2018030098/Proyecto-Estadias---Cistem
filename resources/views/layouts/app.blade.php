@@ -24,7 +24,7 @@
         <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
         <link rel="stylesheet" href="{{ asset('css/style.css') }}">
         <link rel="stylesheet" href="{{ asset('css/MyStyles.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/plugins/awesome-bootstrap-checkbox.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css') }}">
 
         @livewireStyles
     </head>

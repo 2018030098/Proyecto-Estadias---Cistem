@@ -14,7 +14,7 @@
                                 <li class="bg-transparent">
                                     <a class="text-decoration-none" href="#"> <!-- block m-t-xs font-bold text-center -->
                                         <span class="nav-label">
-                                            Adrian
+                                            {{ auth()->user()->name }}
                                         </span>
                                         <b class="fa arrow"></b>
                                     </a>
@@ -89,7 +89,7 @@
                 </div>
                 <ul class="nav navbar-top-links navbar-right">
                     <li style="padding: 20px">
-                        <span class="m-r-sm text-muted welcome-message">Bienvenido</span>
+                        <span class="m-r-sm text-muted welcome-message"></span>
                     </li>
                     <form action="{{ route('logout') }}" method="post" class="mt-3">
                         @csrf
