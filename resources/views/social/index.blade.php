@@ -13,6 +13,7 @@
                                 <button type="button" class="btn btn-light dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent"></button>
                                 <ul class="dropdown-menu m-t-xs">
                                     <li><a class="dropdown-item" href="{{ route('social.edit',$public['publication']['id']) }}">{{ __('Modificar') }}</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('social.show',$public['publication']['id']) }}">{{ __('Abrir') }}</a></li>
                                     <li><a class="dropdown-item" href="{{-- route('social.destroy',$public['publication']['id']) --}}" disabled>{{ __('Eliminar') }}</a></li>
                                 </ul>
                             </div>

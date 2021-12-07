@@ -216,9 +216,70 @@ class publicationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show()
+    public function show($id)
     {
-        //
+        $public = Publication::find($id);
+        $user = DB::table('users')->where('id','=',$public->user_Id)->get();
+        $user = $user['0'];
+        $comments = DB::table('comments')->where('publication_Id','=',$id)->get();
+        $images = DB::table('images')->where('status','=','1')->where('publication_Id','=',$id)->get();
+        $auth = auth()->user();
+
+        $i = 0;
+        foreach ($comments as $comm ) {
+            $comU = DB::table('users')->where('id','=',$comm->user_Id)->get();
+            $comu = $comU['0'];
+            $Comment[$i] = [
+                'user' => [
+                    'name' => $comu->name,
+                    'profile_photo_path' => $comu->profile_photo_path
+                ],
+                'comment' => [
+                    'comment' => $comm->comment,
+                    'updated_at' => $comm->updated_at
+                ]
+            ];
+            $i++;
+        }
+
+        $i = 0;
+        foreach ($images as $img ) {
+            $image[$i] = [
+                'img_path' => $img->img_path
+            ];
+            $i++;
+        }
+        $num_img = $i;
+
+        if($auth->id == $user->id){
+            $own = true;
+        }else{
+            $own = false;
+        }
+
+        $publication = [
+            'user' => [
+                'name' => $user->name,
+                'profile_photo_path' => $user->profile_photo_path
+            ],
+            'publication' => [
+                'id' => $public->id,
+                'title' => $public->title,
+                'description' => $public->description,
+                'updated_at' => $public->updated_at
+            ],
+            'images' => $image,
+            'comments' => $Comment,
+            'numero_de_imagenes' => $num_img,
+            'auth' => [
+                'name' => $auth->name,
+                'profile_photo_path' => $user->profile_photo_path,
+                'user' => $own
+            ]
+        ];
+
+        // dd($publication);
+        return view('social.show-publication', compact('publication'));
     }
 
     /**
@@ -313,7 +374,6 @@ class publicationController extends Controller
             return redirect()->route('social.index')->with($message);
         }
     }
-
 
     /**
      * Cambia el estado de una publicacion
