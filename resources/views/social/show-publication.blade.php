@@ -26,13 +26,15 @@
                     <div class="social-avatar">
                         <div class="media-body row">
                             <div class="col-auto row">
-                                <div class="col">
+                                <div class="col-auto">
                                     <img alt="image" src="{{ asset('storage/'.$publication['user']['profile_photo_path'] ) }}" class="rounded-full object-cover"> 
                                 </div>
                                 <div class="col-auto">
                                     <a href="#" class="text-decoration-none">                   
                                         {{ $publication['user']['name'] }}
                                     </a>
+                                    <small class="text-muted">{{ $publication['user']['email'] }}</small>
+                                    <br>
                                     <small class="text-muted"> {{ $publication['publication']['updated_at'] }} </small>
                                 </div>
                             </div>

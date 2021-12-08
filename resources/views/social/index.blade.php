@@ -9,12 +9,13 @@
                 @if($publication != 0)
                 @foreach($publication as $public)
                     <div class="social-feed-box shadow my-3 animated fadeInDown">
-                            <div class="float-end social-action dropdown">
+                            <div class="float-end social-action dropdown dropstart">
                                 <button type="button" class="btn btn-light dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent"></button>
                                 <ul class="dropdown-menu m-t-xs">
                                     <li><a class="dropdown-item" href="{{ route('social.edit',$public['publication']['id']) }}">{{ __('Modificar') }}</a></li>
                                     <li><a class="dropdown-item" href="{{ route('social.show',$public['publication']['id']) }}">{{ __('Abrir') }}</a></li>
-                                    <li><a class="dropdown-item" href="{{-- route('social.destroy',$public['publication']['id']) --}}" disabled>{{ __('Eliminar') }}</a></li>
+                                    <hr>
+                                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#delete{{$public['publication']['id']}}">{{ __('Eliminar') }}</a></li>
                                 </ul>
                             </div>
                         <div class="social-avatar">
@@ -119,6 +120,33 @@
                         </div>
                     </div>
                     <span class="d-none" hidden>{{$inc++}}</span>
+
+                    <!--  -->   <!--  -->   <!--  -->   <!--  -->   <!--  -->   <!--  -->   <!--  -->   <!--  -->   <!--  -->
+                    <div class="modal fade" id="delete{{$public['publication']['id']}}" tabindex="-1" aria-labelledby="deleteLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="deleteLabel">Eliminar Publicacion</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <form action="{{ route('social.destroy',$public['publication']['id']) }}" method="POST">
+                                    @method('DELETE')
+                                    @csrf
+                                    <div class="modal-body">
+                                        una ves eliminada una publicacion, no mostrara de nuevo 
+                                        <hr>
+                                        <label for="form-label">Ingrese su contraseña para eliminar</label>
+                                        <input type="password" id="passwordDelete" name="passwordDelete" class="form-control">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!--  -->   <!--  -->   <!--  -->   <!--  -->   <!--  -->   <!--  -->   <!--  -->   <!--  -->   <!--  -->
                 @endforeach
                 @else
                 <div class="bg-transparent text-center mt-5">
@@ -156,7 +184,7 @@
                             Mecanicas
                         </div>
                         <div class="card-body">
-                            Configuraciones
+                            Configuraciones 
                         </div>
                     </div>
                 </div>

@@ -78,7 +78,7 @@
                         </div>
                         <div class="mt-4 d-grid row mx-auto">
                             <div class="col-4">
-                                <button type="submit" class="btn btn-dark col-5 me-2"> {{ __('Guardar')}} </button>
+                                <button type="submit" class="btn btn-primary col-5 me-2"> {{ __('Guardar')}} </button>
                                 <a href="{{ route('social.index',['order'=>'0']) }}" class="btn btn-secondary col-4"> Cancelar </a>
                             </div>
                             @if($cnd)

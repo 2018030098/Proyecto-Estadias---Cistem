@@ -7,7 +7,9 @@ use App\Models\Image;
 use App\Models\Publication;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 use function GuzzleHttp\Promise\all;
 
@@ -260,7 +262,8 @@ class publicationController extends Controller
         $publication = [
             'user' => [
                 'name' => $user->name,
-                'profile_photo_path' => $user->profile_photo_path
+                'profile_photo_path' => $user->profile_photo_path,
+                'email' => $user->email
             ],
             'publication' => [
                 'id' => $public->id,
@@ -380,8 +383,9 @@ class publicationController extends Controller
      * 
      * @param int $id
      * @param int $status
+     * @return $message
      */
-    public function status($id,$status){
+    public static function status($id,$status){
         $data = Publication::find($id);
         try {
             $data->status = $status;
@@ -398,11 +402,27 @@ class publicationController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int       $id
+     * @param string    $password
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
-        //
+    {   
+        try {
+            $password = $_POST['passwordDelete'];
+            $publication = Publication::find($id);
+            $user = User::find($publication->user_Id);
+            if( Hash::check( $password,$user->password ) ){
+                publicationController::status($id,2);
+                $message = ["status" => true,"title" => "Exito" ,"message" => "La publicacion se elimino con exito", "class" => "bg-success", "icon" => "fas fa-check-circle"];
+            }else{
+                $message = ["status" => true,"title" => "Incorrecto" ,"message" => 'La contraseña ingresada es incorrecta', "class" => "bg-warning", "icon" => "fas fa-exclamation-triangle"];
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+            $message = ["status" => true,"title" => "Error" ,"message" => 'No se pudo eliminar la publicacion', "class" => "bg-dnager", "icon" => "fas fa-exclamation-circle"];
+        } finally{
+            return redirect()->route('social.index')->with($message);   
+        }
     }
 }
