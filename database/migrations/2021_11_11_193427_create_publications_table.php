@@ -18,7 +18,7 @@ class CreatePublicationsTable extends Migration
             $table->foreignId('user_Id')->constrained('users');
             $table->string('title');
             $table->longText('description');
-            $table->tinyInteger('status')->default(1);
+            $table->foreignId('status')->default(1)->constrained('status');
             $table->timestamps();
         });
     }
