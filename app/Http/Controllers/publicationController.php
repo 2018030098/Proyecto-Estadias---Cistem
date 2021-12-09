@@ -177,6 +177,10 @@ class publicationController extends Controller
                 if ($request->hasFile('image')) {
                     $i = 0;
                     foreach ($request->image as $image) { // Obtencion de la direccion de cada imagen recibida / cada una de las direcciones se guardan en un arreglo
+                        if ($image->getMimeType() != "image/svg+xml" && $image->getMimeType() != "image/jpeg" && $image->getMimeType() != "image/png" && $image->getMimeType() != "image/webp" && $image->getMimeType() != "image/gif" ) {
+                            $message = ["status" => true,"title" => "Problema" ,"message" => "El formato de archivo subido no esta permitido, por favor solo ingrese imagenes en el formato aceptado", "class" => "bg-warning", "icon" => "fas fa-exclamation-triangle"];
+                            return redirect()->route('social.index')->with($message);
+                        }
                         $img_path = $image->store('media-publication','public');
                         $path['featured_image_url'][$i] = $img_path;
                         $i++;
@@ -205,7 +209,7 @@ class publicationController extends Controller
                 $message = ["status" => false]; // si no se envia la variable message marcara error / el false hace que no se muestre nada
             }
         } catch (\Throwable $th) {
-            throw $th; // expandir mensajes de error por codigo / cada falla tiene su codigo
+            // throw $th; // expandir mensajes de error por codigo / cada falla tiene su codigo
             $message = ["status" => true,"title" => "Error" ,"message" => "No se pudo crear la publicacion correctamente", "class" => "bg-danger", "icon" => "fas fa-exclamation-triangle"];
         } finally {
             return redirect()->route('social.index')->with($message);
@@ -228,28 +232,36 @@ class publicationController extends Controller
         $auth = auth()->user();
 
         $i = 0;
-        foreach ($comments as $comm ) {
-            $comU = DB::table('users')->where('id','=',$comm->user_Id)->get();
-            $comu = $comU['0'];
-            $Comment[$i] = [
-                'user' => [
-                    'name' => $comu->name,
-                    'profile_photo_path' => $comu->profile_photo_path
-                ],
-                'comment' => [
-                    'comment' => $comm->comment,
-                    'updated_at' => $comm->updated_at
-                ]
-            ];
-            $i++;
+        if(count($comments) != 0){
+            foreach ($comments as $comm ) {
+                $comU = DB::table('users')->where('id','=',$comm->user_Id)->get();
+                $comu = $comU['0'];
+                $Comment[$i] = [
+                    'user' => [
+                        'name' => $comu->name,
+                        'profile_photo_path' => $comu->profile_photo_path
+                    ],
+                    'comment' => [
+                        'comment' => $comm->comment,
+                        'updated_at' => $comm->updated_at
+                    ]
+                ];
+                $i++;
+            }
+        } else {
+            $Comment = null;
         }
 
         $i = 0;
-        foreach ($images as $img ) {
-            $image[$i] = [
-                'img_path' => $img->img_path
-            ];
-            $i++;
+        if(count($images) != 0){
+            foreach ($images as $img ) {
+                $image[$i] = [
+                    'img_path' => $img->img_path
+                ];
+                $i++;
+            }
+        }else {
+            $image = null;
         }
         $num_img = $i;
 

@@ -1,7 +1,8 @@
 function previewFiles() {
 
+    let value = 0;
     let preview = document.querySelector('#preview');
-    let files = document.querySelector('input[type=file]').files;
+    let files = document.getElementById('image[]');
     let title = document.querySelector('#imgTitle');
 
     while (preview.hasChildNodes()) { // Eliminar las imagenes existentes al seleccionar nuevas
@@ -48,9 +49,9 @@ function previewFiles() {
         next_span.setAttribute('aria-hidden','true');
     let next_span2 = document.createElement('span');
         next_span2.classList.add('visually-hidden');
-    
-    if (files) {
-        for (let inc = 0; inc < files.length; inc++) {
+
+    if (files.files) {
+        for (let inc = 0; inc < (files.files).length; inc++) {
             let btn = document.createElement('button');
                 btn.setAttribute('type','button');
                 btn.setAttribute('data-bs-target','#carousel');
@@ -67,15 +68,41 @@ function previewFiles() {
         next.appendChild(next_span);
         next.appendChild(next_span2);
 
-        [].forEach.call(files, readAndPreview);
-        inner.firstChild.classList.add('active');
+        [].forEach.call(files.files, readAndPreview);
 
-        carousel.appendChild(indicator);
-        carousel.appendChild(inner);
-        carousel.appendChild(prev);
-        carousel.appendChild(next);
+        if(value != (files.files).length){
+            let div = document.getElementById('divImg');
+            let errorImg = document.getElementById('errorImg');
+            div.removeChild(files);
 
-        preview.appendChild(carousel);
+            let inputFile = document.createElement('input');
+                inputFile.setAttribute('type','file');
+                inputFile.setAttribute('name','image[]');
+                inputFile.setAttribute('id','image[]');
+                inputFile.setAttribute('accept','image/jpeg, image/jpg, image/png, image/gif, image/svg, image/webp');
+                inputFile.setAttribute('class','form-control border-gray-300 rounded-md shadow-sm');
+                inputFile.setAttribute('value',"@if($cnd) @if($publication['image'] != @null) @foreach($publication['image'] as $img) {{ asset('storage/'.$img) }} @endforeach @endif @endif");
+                inputFile.setAttribute('onChange','previewFiles()');
+                inputFile.setAttribute('multiple','');
+
+                div.appendChild(inputFile);
+                if (errorImg.classList.contains('d-none')) {
+                    errorImg.classList.remove('d-none');
+                }
+
+        }else{
+            if (!errorImg.classList.contains('d-none')) {
+                    errorImg.classList.add('d-none');
+            }
+            inner.firstChild.classList.add('active');
+
+            carousel.appendChild(indicator);
+            carousel.appendChild(inner);
+            carousel.appendChild(prev);
+            carousel.appendChild(next);
+            
+            preview.appendChild(carousel);
+        }
     }
 
     function readAndPreview(file) {
@@ -83,7 +110,7 @@ function previewFiles() {
         let item = document.createElement('div');
         item.setAttribute('class','carousel-item');
 
-        if ( /\.(jpe?g|png|gif)$/i.test(file.name) ) {
+        if ( /\.(jpe?g|png|gif|svg|webp|bmp|eps)$/i.test(file.name) ) {
             let reader = new FileReader();
 
             reader.addEventListener("load", function () {
@@ -98,6 +125,8 @@ function previewFiles() {
             inner.appendChild(item);
 
             reader.readAsDataURL(file);
+            value++;
         }
     }
 }
+

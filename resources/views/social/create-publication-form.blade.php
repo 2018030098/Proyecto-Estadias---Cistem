@@ -73,7 +73,13 @@
                             <!-- Imagen -->
                             <div class="col-span-6 sm:col-span-4 mt-4">
                                 <x-jet-label for="image[]" value="{{ __('Imagen') }}" class="form-label" />
-                                <input type="file" name="image[]" id="image[]" class="form-control border-gray-300 rounded-md shadow-sm" value="@if($cnd) @if($publication['image'] != @null) @foreach($publication['image'] as $img) {{ asset('storage/'.$img) }} @endforeach @endif @endif" onchange="previewFiles()" multiple>
+                                <div id="divImg">
+                                    <input type="file" name="image[]" id="image[]" accept="image/*" class="form-control border-gray-300 rounded-md shadow-sm" value="@if($cnd) @if($publication['image'] != @null) @foreach($publication['image'] as $img) {{ asset('storage/'.$img) }} @endforeach @endif @endif" onchange="previewFiles()" multiple>
+                            </div>                                                         <!-- jpeg, image/jpg, image/png, image/gif, image/svg, image/webp -->
+                                <div class="text-danger mt-3 ms-2 d-none" id="errorImg">
+                                    <span><em>El archivo seleccionado no tiene el formato adecuado, solo suba imagenes</em></span>
+                                    <i class="far fa-question-circle h6"data-bs-toggle="tooltip" data-bs-placement="right" title="Tipos permitidos: jpg,jpeg,png,gif,webp,svg, bmp,eps"></i>
+                                </div>
                             </div>
                         </div>
                         <div class="mt-4 d-grid row mx-auto">
@@ -135,7 +141,7 @@
                 </div>
             </div>
         </div>
-        <script src="{{ asset('js/img/preview-img.js') }}"></script>
+        {{-- <!-- <script src="{{ asset('js/img/preview-img.js') }}"></script> --> --}}
         @if($cnd)
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
