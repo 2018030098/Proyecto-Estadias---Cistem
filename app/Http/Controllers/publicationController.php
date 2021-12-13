@@ -75,6 +75,7 @@ class publicationController extends Controller
                     [
                         "user" => [
                             "name" => $user->name,
+                            "email" => $user->email,
                             "profile_photo_path" => $user->profile_photo_path
                         ]
                     ],
@@ -108,6 +109,7 @@ class publicationController extends Controller
                         [
                             "user" => [
                                 "name" => $user->name,
+                                "email" => $user->email,
                                 "profile_photo_path" => $user->profile_photo_path
                             ]
                         ],
@@ -151,9 +153,11 @@ class publicationController extends Controller
      */
     public function create()
     {
+        $auth = auth()->user();
         $publication = ["user" => [
-            "name" => auth()->user()->name,
-            "profile_photo_path" => auth()->user()->profile_photo_path
+            "name" => $auth->name,
+            "email" => $auth->email,
+            "profile_photo_path" => $auth->profile_photo_path
             ]
         ];
 

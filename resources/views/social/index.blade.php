@@ -25,7 +25,7 @@
                                         <img alt="image" src="{{ asset('storage/'.$public['user']['profile_photo_path'] ) }}" class="rounded-full object-cover"> 
                                     </div>
                                     <div class="col-auto">
-                                        <a href="#" class="text-decoration-none">                   
+                                        <a href="{{ route('users.show',$public['user']['email']) }}" class="text-decoration-none">                   
                                             {{ $public['user']['name'] }}
                                         </a>
                                         <small class="text-muted"> {{ $public['publication']['updated_at'] }} </small>

@@ -77,12 +77,28 @@ class UsersController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  string  $email
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($email)
     {
-        //
+        if ($email == auth()->user()->email) {
+            return redirect()->route('profile.show');
+        }else{
+            $data = DB::table('users')->where('email','=',$email)->get();
+            $data = $data['0'];
+            $kind = DB::table('kindofusers')->where('id','=',$data->kind_Id)->get();
+            $kind = $kind['0'];
+            
+            $user = [
+                "name" => $data->name,
+                "email" => $data->email,
+                "profile_photo_path" => $data->profile_photo_path,
+                "kind" => $kind->kind
+            ];
+            // dd($user); // visualizar que informacion se envia a la vista
+            return view('profile.view-profile',compact('user'));
+        }
     }
 
     /**
