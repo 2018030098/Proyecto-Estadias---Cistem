@@ -34,9 +34,9 @@
                             <div class="md:col-span-1 flex justify-between">
                                 <div class="px-4 sm:px-0">
                                     <h3 class="text-lg font-medium text-gray-900">{{ __('Creacion de usuario') }}</h3>
-                                        <p class="mt-1 text-sm text-gray-600">
-                                            {{ __('Seccion para crear un nuevo usuario de tipo "user"') }}
-                                        </p>
+                                    <p class="mt-1 text-sm text-gray-600">
+                                        {{ __('Seccion para crear un nuevo usuario de tipo "user"') }}
+                                    </p>
                                 </div>
                                 <div class="px-4 sm:px-0"></div>
                             </div>
@@ -46,18 +46,18 @@
                                         <div class="grid grid-cols-6 gap-6">
                                             <div class="col-span-6 sm:col-span-4">
                                                 <label for="Create_username" class="form-label block font-medium text-sm text-gray-700">Nombre de usuario</label>
-                                                <input type="text" id="Create_username" name="Create_username" onchange="pass()" class="mt-1 block w-full form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full form-control" autocomplete="off" require>
+                                                <input type="text" id="Create_username" name="Create_username" onblur="pass()" class="mt-1 block w-full form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full form-control" autocomplete="off" require>
                                             </div>
                                             <div class="mt-3 col-span-6 sm:col-span-4">
                                                 <label for="Create_email" class="form-label block font-medium text-sm text-gray-700">Correo Electronico</label>
-                                                <input type="email" id="Create_email" name="Create_email" onchange="pass()" class="border animated mt-1 block w-full form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full form-control" autocomplete="off" require>
+                                                <input type="email" id="Create_email" name="Create_email" onblur="pass()" class="border animated mt-1 block w-full form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full form-control" autocomplete="off" require>
                                                 <div class="d-none" id="messageP0">
                                                     <span class="text-danger blockquote-footer">El email no es valido</span>
                                                 </div>
                                             </div>
                                             <div class="mt-3 col-span-6 sm:col-span-4">
                                                 <label for="Create_password" class="form-label block font-medium text-sm text-gray-700">Contraseña</label>
-                                                <input type="password" id="Create_password" name="Create_password" onchange="pass()" class="border animated mt-1 block w-full form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full form-control" require>
+                                                <input type="password" id="Create_password" name="Create_password" onblur="pass()" class="border animated mt-1 block w-full form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full form-control" require>
                                                 <div class="d-none" id="messageP1">
                                                     <span class="text-danger blockquote-footer">Las contraseñas no coinciden</span>
                                                 </div>
@@ -67,7 +67,7 @@
                                             </div>
                                             <div class="mt-3 col-span-6 sm:col-span-4">
                                                 <label for="Create_confirmPassword" class="form-label block font-medium text-sm text-gray-700">Confirmar Contraseña</label>
-                                                <input type="password" id="Create_confirmPassword" name="Create_confirmPassword" onchange="pass()" class="border animated mt-1 block w-full form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full form-control" require>
+                                                <input type="password" id="Create_confirmPassword" name="Create_confirmPassword" onblur="pass()" class="border animated mt-1 block w-full form-control border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full form-control" require>
                                                 <div class="d-none" id="messageP2">
                                                     <span class="text-danger blockquote-footer">Las contraseñas no coinciden</span>
                                                 </div>
@@ -80,7 +80,7 @@
                                     <div class="flex items-center justify-end px-4 py-3 bg-gray-50 text-right sm:px-6 shadow sm:rounded-bl-md sm:rounded-br-md">
                                         <div class="text-sm text-gray-600 mr-3">
                                             <button id="userBtn" data-bs-toggle="modal" data-bs-target="#CreateUser" onclick="infomodal()" disabled class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25 transition">
-                                                Guardar
+                                                <span data-bs-toggle="tooltip" data-bs-placement="top" title="Llene el fomulario adecuadamente para activar">Guardar</span>
                                             </button>
                                         </div>
                                     </div>
@@ -125,123 +125,7 @@
                             </div>
                         </div>
                     </div>
-                    <script>
-                        
-                        function pass(){
-                            let user = document.getElementById('Create_username');
-                            let email = document.getElementById('Create_email');
-                            let password = document.getElementById('Create_password');
-                            let confPass = document.getElementById('Create_confirmPassword');
-                            let btn = document.getElementById('userBtn');
-
-                            let msg0 = document.getElementById('messageP0'); // email no valido
-                            let msg1 = document.getElementById('messageP1'); // contraseña incorrecta
-                            let msg2 = document.getElementById('messageP2'); // contraseña incorrecta
-                            let msg3 = document.getElementById('messageP3'); // contraseña menor a 8 caracteres
-                            let msg4 = document.getElementById('messageP4'); // contraseña menor a 8 caracteres
-
-                            if (!validar_email(email.value) && email.value != '') { // validacion de email
-                                email.classList.add('border-danger');
-                                email.classList.add('shake');
-                                msg0.classList.remove('d-none');
-                            }else{
-                                email.classList.remove('border-danger');
-                                email.classList.remove('shake');
-                                msg0.classList.add('d-none');
-                            }
-
-                            if(password.value != '' && confPass.value != ''){ // Validacion de las contraseñas
-                                if (password.value == confPass.value) {
-                                    if (user.value != '' && validar_email(email.value) ) { // activar boton en caso de estar todo listo
-                                        btn.removeAttribute('disabled');
-                                    }
-                                    password.classList.remove('border-danger');
-                                    confPass.classList.remove('border-danger');
-                                    msg1.classList.add('d-none');
-                                    msg2.classList.add('d-none');
-                                    password.classList.remove('shake');
-                                    confPass.classList.remove('shake');
-                                } else {
-                                    password.classList.add('shake');
-                                    confPass.classList.add('shake');
-                                    if (!password.classList.contains('border-danger')) {
-                                        password.classList.add('border-danger');
-                                        confPass.classList.add('border-danger');
-                                    }
-                                    if (!btn.hasAttribute('disabled')) {
-                                        btn.setAttribute('disabled');
-                                    }
-                                    if(msg1.classList.contains('d-none')){
-                                        msg1.classList.remove('d-none');
-                                        msg2.classList.remove('d-none');
-                                    }
-                                }
-                            }
-                            if ((password.value).length > 8 || password.value != '') { // minimo de caracteres
-                                password.classList.remove('border-danger');
-                                password.classList.remove('shake');
-                                msg3.classList.add('d-none');
-                            }else{
-                                password.classList.add('border-danger');
-                                password.classList.add('shake');
-                                msg3.classList.remove('d-none');
-                            }
-                            if ((confPass.value).length > 8 || confPass.value != '') {
-                                confPass.classList.remove('border-danger');
-                                confPass.classList.remove('shake');
-                                msg4.classList.add('d-none');
-                            }else{
-                                confPass.classList.add('border-danger');
-                                confPass.classList.add('shake');
-                                msg4.classList.remove('d-none');
-                            }
-                        }
-
-                        function validar_email( email ){
-                            var regex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-                            return regex.test(email) ? true : false;
-                        }
-
-                        function infomodal(){
-                            let username = document.getElementById('Create_username').value;
-                            let email = document.getElementById('Create_email').value;
-                            let password = document.getElementById('Create_password').value;
-                            let confirmPassword = document.getElementById('Create_confirmPassword').value;
-
-                            let M_user = document.getElementById('modal_username');
-                            let M_email = document.getElementById('modal_email');
-                            let M_pass = document.getElementById('modal_password');
-                            let M_Apass = document.getElementById('modal_adminPassword');
-
-
-                            if (M_user.hasAttribute('value')) {
-                                M_user.removeAttribute('value');
-                            }
-                            M_user.setAttribute("value",username);
-                            if (M_email.hasAttribute('value')) {
-                                M_email.removeAttribute('value');
-                            }
-                            M_email.setAttribute("value",email);
-                            if (M_pass.hasAttribute('value')) {
-                                M_pass.removeAttribute('value');
-                            }
-                            M_pass.setAttribute("value",password);
-
-                        }
-
-                        function clearUser() {
-                            let username = document.getElementById('Create_username');
-                            let email = document.getElementById('Create_email');
-                            let password = document.getElementById('Create_password');
-                            let confirmPassword = document.getElementById('Create_confirmPassword');
-                            
-                            username.value = "";
-                            email.value = "";
-                            password.value = "";
-                            confirmPassword.value = "";
-                        }
-
-                    </script>
+                    <script src="{{ asset('js/show-form.js') }}"></script>
             @endif
 
             @if (Laravel\Jetstream\Jetstream::hasAccountDeletionFeatures())
@@ -257,4 +141,24 @@
             @endif
         </div>
     </div>
+<!--  --> <!--  --> <!--  --> <!--  --> <!--  --> <!--  --> <!--  --> <!--  --> <!--  --> <!--  --> 
+    @if(session('status'))
+        <div class="alert alert-dismissible animated d-none shadow-sm {{ session('class') }}" role="alert" aria-live="assertive" aria-atomic="true" id="loadToast" style="position: absolute; top: 20px; right: 20px;">
+            <div class="alert-heading row">
+                <div class="col-10">
+                    <i class="{{ session('icon') }}"></i>
+                    <strong class="mr-auto m-l-sm">   {{ session('title') }}   </strong>
+                </div>
+                <div class="col-2">
+                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close" onclick="closeToast()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+            <hr>
+            <div>
+                {{ session('message') }}
+            </div>
+        </div>
+    @endif
 </x-app-layout>

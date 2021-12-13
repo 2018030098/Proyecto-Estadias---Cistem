@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
 {
@@ -35,7 +37,41 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request);
+        $data = $request->all();
+        $auth = auth()->user();
+        try {
+            if(Hash::check($data['modal_adminPassword'],$auth->password)){
+                $emails = DB::table('users')->get('email');
+
+                $value = 0;
+                foreach ($emails as $email) { // validar que no se repitan los emails
+                    if ($email->email == $data['modal_email']) {
+                        $value++;
+                    }
+                }
+                if ($value == 0) {
+                    $data = [
+                        'kind_Id' => '2',
+                        'name' => $data['modal_username'],
+                        'email' => $data['modal_email'],
+                        'password' => Hash::make($data['modal_password']),
+                        'status' => '1'
+                    ];
+                    $newUser = (User::create($data));
+                    UsersController::kind($newUser->id,'2');
+                    $message = ["status" => true,"title" => "Usuario Creado" ,"message" => "se creo satisfactoriamente el nuevo usuario de tipo user", "class" => "bg-success", "icon" => "fas fa-check-circle"];
+                } else {
+                    $message = ["status" => true,"title" => "Correo repetido" ,"message" => "No se pudo crear el nuevo usuario debido a que el correo ya existe", "class" => "bg-warning", "icon" => "fas fa-exclamation-circle"];
+                }
+            }else {
+                $message = ["status" => true,"title" => "Error" ,"message" => "La contraseña no es correcta", "class" => "bg-warning", "icon" => "fas fa-exclamation-triangle"];
+            }
+        } catch (\Throwable $th) {
+            $message = ["status" => true,"title" => "Error" ,"message" => "hubo un problema al intentar crear el nuevo usuario", "class" => "bg-danger", "icon" => "fas fa-exclamation-triangle"];
+            throw $th;
+        } finally {
+            return redirect()->route('profile.show')->with($message);
+        }
     }
 
     /**
@@ -73,7 +109,7 @@ class UsersController extends Controller
     }
 
     /**
-     * Cambia el tipo de usuario de una publicacion
+     * Cambia el status de un usuario
      * 
      * @param int $id
      * @param int $status
@@ -84,13 +120,26 @@ class UsersController extends Controller
         try {
             $data->status = $status;
             $data->save();
-            $message = ["status" => true,"title" => "Exito" ,"message" => "La publicacion se modifico con exito", "class" => "bg-success", "icon" => "fas fa-check-circle"];
         } catch (\Throwable $th) {
-            // throw $th;
-            $message = ["status" => true,"title" => "Error" ,"message" => "No se pudo cambiar el estado <br> Porfavor vuelvalo a intentar", "class" => "bg-warning", "icon" => "fas fa-exclamation-triangle"];
-        } finally{
-            return redirect()->route('social.index')->with($message);
-        }
+            throw $th;
+        } 
+    }
+
+    /**
+     * Cambia el tipo de usuario
+     * 
+     * @param int $id
+     * @param int $kind
+     * @return $message
+     */
+    public static function kind($id,$kind){
+        $data = User::find($id);
+        try {
+            $data->kind_Id = $kind;
+            $data->save();
+        } catch (\Throwable $th) {
+            throw $th;
+        } 
     }
 
     /**

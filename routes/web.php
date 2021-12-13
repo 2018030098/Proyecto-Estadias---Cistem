@@ -29,7 +29,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/social/{id}/{status}', [publicationController::class, 'status'])->name('changeStatus');
 
     Route::resource('/users', UsersController::class);
-    Route::put('/users/{id}/{status}', [UsersController::class, 'status'])->name('changeKind');
+    Route::put('/users/{id}/{status}', [UsersController::class, 'status'])->name('changeStatusU');
+    Route::put('/users/{id}/{kind}', [UsersController::class, 'kindId'])->name('changeKind');
 
     Route::get('/prueba',[pruebasController::class, 'prueba'])->name('prueba'); //eliminar
     Route::get('/prueba.shows',[pruebasController::class, 'shows'])->name('prueba.shows'); //eliminar
