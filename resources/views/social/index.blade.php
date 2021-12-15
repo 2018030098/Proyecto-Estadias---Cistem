@@ -9,15 +9,15 @@
                 @if($publication != 0)
                 @foreach($publication as $public)
                     <div class="social-feed-box shadow my-3 animated fadeInDown">
-                            <div class="float-end social-action dropdown dropstart">
-                                <button type="button" class="btn btn-light dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent"></button>
-                                <ul class="dropdown-menu m-t-xs">
-                                    <li><a class="dropdown-item" href="{{ route('social.edit',$public['publication']['id']) }}">{{ __('Modificar') }}</a></li>
-                                    <li><a class="dropdown-item" href="{{ route('social.show',$public['publication']['id']) }}">{{ __('Abrir') }}</a></li>
-                                    <hr>
-                                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#delete{{$public['publication']['id']}}">{{ __('Eliminar') }}</a></li>
-                                </ul>
-                            </div>
+                        <div class="float-end social-action dropdown dropstart">
+                            <button type="button" class="btn btn-light dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent"></button>
+                            <ul class="dropdown-menu m-t-xs">
+                                <li><a class="dropdown-item" href="{{ route('social.edit',$public['publication']['id']) }}">{{ __('Modificar') }}</a></li>
+                                <li><a class="dropdown-item" href="{{ route('social.show',$public['publication']['id']) }}">{{ __('Abrir') }}</a></li>
+                                <hr>
+                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#delete{{$public['publication']['id']}}">{{ __('Eliminar') }}</a></li>
+                            </ul>
+                        </div>
                         <div class="social-avatar">
                             <div class="media-body row">
                                 <div class="col-auto row">
@@ -165,27 +165,34 @@
                         </div>
                         <form action="{{ route('social.index') }}" method="GET" class="p-3">
                             @csrf
+                            @if($order == 'd-3' || $order == 'd-4')
                             <button type="submit" class="form-check my-2 abc-radio-primary">
-                                <input class="form-check-input iCheck" type="radio" name="order" id="order_desc" value="0" @if($order == 0) checked @endif>
+                                <input class="form-check-input iCheck" type="radio" name="order" id="order_desc" value="d-3" @if($order == 'd-3') checked @endif>
                                 <label class="form-check-label" for="order_desc">
                                     Descendente
                                 </label>
                             </button>
                             <button type="submit" class="form-check my-2 abc-radio-primary">
-                                <input class="form-check-input iCheck" type="radio" name="order" id="order_asc" value="1" @if($order == 1) checked @endif>
+                                <input class="form-check-input iCheck" type="radio" name="order" id="order_asc" value="d-4" @if($order == 'd-4') checked @endif>
                                 <label class="form-check-label" for="order_asc">
                                     Ascendente
                                 </label>
                             </button>
+                            @else
+                            <button type="submit" class="form-check my-2 abc-radio-primary">
+                                <input class="form-check-input iCheck" type="radio" name="order" id="order_desc" value="0" @if($order == '0') checked @endif>
+                                <label class="form-check-label" for="order_desc">
+                                    Descendente
+                                </label>
+                            </button>
+                            <button type="submit" class="form-check my-2 abc-radio-primary">
+                                <input class="form-check-input iCheck" type="radio" name="order" id="order_asc" value="1" @if($order == '1') checked @endif>
+                                <label class="form-check-label" for="order_asc">
+                                    Ascendente
+                                </label>
+                            </button>
+                            @endif
                         </form>
-                    </div>
-                    <div class="card shadow-sm rounded my-3">
-                        <div class="card-header">
-                            Mecanicas
-                        </div>
-                        <div class="card-body">
-                            Configuraciones 
-                        </div>
                     </div>
                 </div>
             </div>

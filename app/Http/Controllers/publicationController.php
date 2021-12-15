@@ -6,6 +6,8 @@ use App\Models\Comment;
 use App\Models\Image;
 use App\Models\Publication;
 use App\Models\User;
+use Illuminate\Hashing\Argon2IdHasher;
+use Illuminate\Hashing\ArgonHasher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
@@ -23,13 +25,25 @@ class publicationController extends Controller
     public function index()
     {
         $auth = auth()->user();
-        if (isset($_GET['order']) && $_GET['order'] == 1) { // Obtencion de la informacion de la base de datos
-            $Publications = DB::table('publications')->orderBy('updated_at','asc')->where('status','=','1')->get();
-            $order = 1;
-        }else{
+        if (isset($_GET['order'])) {
+            if ($_GET['order'] == '1') { // Obtencion de la informacion de la base de datos
+                $Publications = DB::table('publications')->orderBy('updated_at','asc')->where('status','=','1')->get();
+                $order = '1';
+            } else if($_GET['order'] == 'd-3'){
+                $Publications = DB::table('publications')->orderBy('updated_at','desc')->where('status','!=','1')->get();
+                $order = 'd-3';
+            } else if($_GET['order'] == 'd-4') {
+                $Publications = DB::table('publications')->orderBy('updated_at','asc')->where('status','!=','1')->get();
+                $order = 'd-4';
+            } else {
+                $Publications = DB::table('publications')->orderBy('updated_at','desc')->where('status','=','1')->get();
+                $order = '0';
+            }
+        } else {
             $Publications = DB::table('publications')->orderBy('updated_at','desc')->where('status','=','1')->get();
-            $order = 0;
+            $order = '0';
         }
+
         if( count($Publications) == 0){
             $publication = 0;
             return view('social.index', compact('publication','order'));
@@ -81,7 +95,7 @@ class publicationController extends Controller
                     ],
                     [
                         "publication" => [
-                            "id" => $public->id,
+                            "id" => crypt($public->id,"PE-Cistem"),
                             "title" => $public->title,
                             "description" => $public->description,
                             "updated_at" => $public->updated_at
@@ -115,7 +129,7 @@ class publicationController extends Controller
                         ],
                         [
                             "publication" => [
-                                "id" => $public->id,
+                                "id" => crypt($public->id,"PE-Cistem"),
                                 "title" => $public->title,
                                 "description" => $public->description,
                                 "updated_at" => $public->updated_at
@@ -139,10 +153,8 @@ class publicationController extends Controller
                     $i++;
                 }
             }
-
         }
-
-        // dd($publication); // observar que informacion tiene el arreglo generado
+        // dd($publication,$order); // observar que informacion tiene el arreglo generado
         return view('social.index', compact('publication','order'));
     }
 
@@ -228,11 +240,17 @@ class publicationController extends Controller
      */
     public function show($id)
     {
-        $public = Publication::find($id);
+        $publication = DB::table('publications')->where('status','=','1')->get();
+        foreach ($publication as $pub) {
+            if (crypt($pub->id,"PE-Cistem") == $id) {
+                $public = $pub;
+                break;
+            }
+        }
         $user = DB::table('users')->where('id','=',$public->user_Id)->get();
         $user = $user['0'];
-        $comments = DB::table('comments')->where('publication_Id','=',$id)->get();
-        $images = DB::table('images')->where('status','=','1')->where('publication_Id','=',$id)->get();
+        $comments = DB::table('comments')->where('publication_Id','=',$public->id)->get();
+        $images = DB::table('images')->where('status','=','1')->where('publication_Id','=',$public->id)->get();
         $auth = auth()->user();
 
         $i = 0;
@@ -309,7 +327,13 @@ class publicationController extends Controller
      */
     public function edit($id)
     {
-        $public = Publication::find($id);
+        $publication = DB::table('publications')->where('status','=','1')->get();
+        foreach ($publication as $pub) {
+            if (crypt($pub->id,"PE-Cistem") == $id) {
+                $public = $pub;
+                break;
+            }
+        }
         $user = User::find($public->user_Id);
         $Images = Image::all();
 

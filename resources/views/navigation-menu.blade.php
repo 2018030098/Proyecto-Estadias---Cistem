@@ -42,12 +42,32 @@
                         <a class="text-decoration-none" href="{{ route('dashboard') }}">IN+</a>
                     </div>
                 </li>
+                @if( auth()->user()->kind_Id == 1 || auth()->user()->kind_Id == 2 )
+                <li class="{{ Request::is('social','social/*') ? 'active' : '' }}">  
+                    <a href="#" class="text-decoration-none"><i class="fab fa-trello"></i> <span class="nav-label">Social </span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li>
+                            <a href="{{ route('social.index',['order'=>'0']) }}" class="text-decoration-none"> 
+                                <i class="fab fa-trello"></i> 
+                                <span class="nav-label">Publicaciones</span> 
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('social.index',['order'=>'d-3']) }}" class="text-decoration-none">
+                                <i class="fab fa-trello"></i> 
+                                <span>Eliminadas</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                @else
                 <li class="{{ Request::is('social','social/*') ? 'active' : '' }}">
                     <a href="{{ route('social.index',['order'=>'0']) }}" class="text-decoration-none"> 
                         <i class="fab fa-trello"></i> 
-                        <span class="nav-label">Social</span> 
+                        <span class="nav-label">Publicaciones</span> 
                     </a>
                 </li>
+                @endif
                 <li class=''>
                     <a href="##" class="text-decoration-none ">
                         <i class="fas fa-chart-area"></i>
