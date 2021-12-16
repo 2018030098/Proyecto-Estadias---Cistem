@@ -1,3 +1,4 @@
+{{-- throw new Exception("Error Processing Request", 1); --}}
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>

@@ -22,7 +22,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
-})->name('dashboard');
+})->name('dashboard')->middleware('status');
 
 Route::middleware('auth')->group(function () {
     Route::resource('/social', publicationController::class);
@@ -31,7 +31,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('/users', UsersController::class);
     Route::put('/users/{id}/{status}', [UsersController::class, 'status'])->name('changeStatusU');
     Route::put('/users/{id}/{kind}', [UsersController::class, 'kindId'])->name('changeKind');
-
-    Route::get('/prueba',[pruebasController::class, 'prueba'])->name('prueba'); //eliminar
     Route::get('/prueba.shows',[pruebasController::class, 'shows'])->name('prueba.shows'); //eliminar
+
 });
