@@ -68,36 +68,12 @@
                     </a>
                 </li>
                 @endif
-                <li class=''>
+                <!-- <li class=''>
                     <a href="##" class="text-decoration-none ">
                         <i class="fas fa-chart-area"></i>
                         <span> Pagina 2</span>
                     </a>
-                </li>
-                <li class=''>
-                    <a href="###" class="text-decoration-none ">
-                        <i class="fas fa-columns"></i>
-                        <span> Pagina 3</span>
-                    </a>
-                </li>
-                <li class=''>
-                    <a href="####" class="text-decoration-none ">
-                        <i class="fas fa-bell"></i>
-                        <span> Pagina 4</span>
-                    </a>
-                </li>
-                <li class="{{ Request::is('prueba','prueba/*') ? 'active' : '' }}">
-                    <a href="{{ route('prueba') }}" class="text-decoration-none"> 
-                        <i class="fas fa-cogs"></i> 
-                        <span class="nav-label"># Pruebas1 #</span> 
-                    </a>
-                </li>
-                <li class="">
-                    <a href="######" class="text-decoration-none ">
-                        <i class="fas fa-cogs"></i>
-                        <span> # Pruebas2 #</span>
-                    </a>
-                </li>
+                </li> -->
             </ul>
         </div>
     </nav>
