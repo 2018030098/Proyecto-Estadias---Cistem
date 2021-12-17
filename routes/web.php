@@ -31,6 +31,4 @@ Route::middleware('auth')->group(function () {
     Route::resource('/users', UsersController::class);
     Route::put('/users/{id}/{status}', [UsersController::class, 'status'])->name('changeStatusU');
     Route::put('/users/{id}/{kind}', [UsersController::class, 'kindId'])->name('changeKind');
-    Route::get('/prueba.shows',[pruebasController::class, 'shows'])->name('prueba.shows'); //eliminar
-
 });
